@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: theme('colors.gray.500');
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: theme('colors.gray.200');
+}
+
+.shadow-primary {
+  box-shadow: 0 4px 6px -1px theme('colors.blue.300'), 
+              0 2px 4px -2px theme('colors.blue.200');
+}
+/* Custom styles for the audio player */
+.custom-audio-player .rhap_play-pause {
+  background-color: rgba(255, 255, 255, 0.8);  /* Light background for play/pause button */
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-audio-player .rhap_progress-bar {
+  background: linear-gradient(to right, #4CAF50, #00BCD4); /* Gradient effect */
+  border-radius: 5px;
+}
+
+.custom-audio-player .rhap_volume-bar {
+  background-color: rgba(255, 255, 255, 0.5); /* Light volume bar */
+}
+
+@font-face {
+  font-family: 'Spotify';
+  src: url('../src/fonts/AirbnbCereal_W_Bk.otf') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: 'Spotify', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+@font-face {
+  font-family: 'Nimbus';
+  src: url('/src/fonts/tan-nimbus.otf') format('opentype'); /* Asegúrate de que la ruta sea correcta */
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+.font-nimbus {
+  font-family: 'Nimbus', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
