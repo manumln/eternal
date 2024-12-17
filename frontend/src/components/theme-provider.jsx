@@ -31,26 +31,42 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = document.documentElement;
-
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
       ? Theme.DARK
       : Theme.LIGHT;
-
-    // Limpiar clases antiguas
+  
+    // Determinar el tema actual
+    const appliedTheme = theme === Theme.SYSTEM ? systemTheme : theme;
+  
+    // Limpiar y aplicar la clase correspondiente
     root.classList.remove(Theme.LIGHT, Theme.DARK);
-
-    // Añadir clase según el tema
-    if (theme === Theme.SYSTEM) {
-      root.classList.add(systemTheme);
-    } else {
-      root.classList.add(theme);
-    }
-  }, [theme]);
+    root.classList.add(appliedTheme);
+  }, [theme]);  
 
   const changeTheme = (newTheme) => {
     localStorage.setItem(storageKey, newTheme);
     setTheme(newTheme);
   };
+
+  useEffect(() => {
+    if (theme !== Theme.SYSTEM) return;
+  
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  
+    const handleChange = () => {
+      const systemTheme = mediaQuery.matches ? Theme.DARK : Theme.LIGHT;
+      document.documentElement.classList.remove(Theme.LIGHT, Theme.DARK);
+      document.documentElement.classList.add(systemTheme);
+    };
+  
+    mediaQuery.addEventListener("change", handleChange);
+  
+    // Limpieza del evento al desmontar el componente
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, [theme]);
+  
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme: changeTheme }}>
