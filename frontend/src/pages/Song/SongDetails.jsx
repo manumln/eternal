@@ -10,9 +10,18 @@ import { useRecoilValue, useRecoilState } from "recoil";
 import { isAuthenticatedState, userRoleState, userFavouriteSongsState } from "@/atoms/userData";
 import SameArtist from "@/components/SameArtist";
 import { toast } from "sonner";
-import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { AiFillHeart, AiFillStar } from "react-icons/ai";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../components/ui/alert-dialog";
 import { FiEdit2, FiPenTool, FiStar, FiTrash2 } from "react-icons/fi";
 
 // Lazy-loaded components
@@ -148,13 +157,64 @@ const SongDetails = () => {
             {role === "admin" && (
               <div className="flex gap-4 ml-auto">
                 <Button variant="outline" onClick={() => navigate(`edit`)}><FiEdit2 className="mr-2 h-4 w-4" /> Edit</Button>
-                <Button
-                  variant="outline"
-                  className="border-2 border-red-100 hover:border-red-500 hover:bg-red-500/90"
-                  onClick={() => confirmAlert({ title: "Are you sure?", message: "This action cannot be undone.", buttons: [{ label: "Cancel" }, { label: "Delete", onClick: handleDeleteSong }] })}
-                >
-                  <FiTrash2 className="mr-2 h-4 w-4" /> Delete
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="border-2 border-red-300 hover:bg-gradient-to-r from-red-500 to-orange-400 text-white-500 hover:text-zinc-50 dark:text-zinc-50">
+                      <FiTrash2 className="mr-2 h-4 w-4" />
+                      Delete
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="w-11/12">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This will permanently
+                        delete the song data.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          setIsDeleteLoading(true);
+                          let promise = axios.delete(
+                            `${import.meta.env.VITE_BACKEND_URL}/books/` + id,
+                            {
+                              headers: {
+                                Authorization: `Bearer ${localStorage.getItem(
+                                  "token"
+                                )}`,
+                              },
+                            }
+                          );
+
+                          toast.promise(promise, {
+                            loading: "Loading...",
+                            success: (response) => {
+                              navigate("/books");
+                              return response.data.message;
+                            },
+                            error: (error) => error.response.data.message,
+                            finally: () => setIsDeleteLoading(false),
+                          });
+                        }}>
+                        {isDeleteLoading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Please wait
+                          </>
+                        ) : (
+                          <>Delete</>
+                        )}
+                      </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             )}
           </div>

@@ -225,7 +225,7 @@ const Commentcard = ({
                 <span className="hidden md:flex">
                   {showReplies ? "Hide Replies" : "Show Replies"}
                 </span>
-                <span className="flex items-center justify-center bg-slate-200 text-slate-600 p-3 h-5 w-5 rounded-full">
+                <span className="flex items-center justify-center bg-gradient-to-r from-blue-500 to-teal-400 text-white p-3 h-5 w-5 rounded-full">
                   {replyCount}
                 </span>
               </span>

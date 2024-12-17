@@ -186,11 +186,11 @@ const ReviewCard = ({
       <div
         className={
           showReplies && replyCount > 0
-            ? "border-l-2 ml-5 pl-6 sm:ml-6 sm:pl-7"
+            ? "border-l-2 ml-5 pl-6 sm:ml-6 sm:pl-7 "
             : ""
         }
       >
-        <blockquote className="ml-1 mb-2 sm:mb-4 italic text-sm sm:text-base">
+        <blockquote className="ml-1 mb-2 sm:mb-4 text-sm sm:text-base">
           {review.content}
         </blockquote>
         <div className="flex gap-2 items-center">
@@ -228,7 +228,7 @@ const ReviewCard = ({
                 <span className="hidden md:flex">
                   {showReplies ? "Hide Replies" : "Show Replies"}
                 </span>
-                <span className="flex items-center justify-center bg-slate-200 text-slate-600 p-3 h-5 w-5 rounded-full">
+                <span className="flex items-center justify-center bg-gradient-to-r from-blue-500 to-teal-400 text-white p-3 h-5 w-5 rounded-full">
                   {replyCount}
                 </span>
               </span>
