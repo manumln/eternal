@@ -16,7 +16,7 @@ export function ModeToggle() {
           aria-label="Toggle theme"
         >
           {/* Iconos sincronizados con el tema */}
-          <FiSun className={`h-6 w-6 transition-opacity duration-300 ${theme === "dark" ? "opacity-0" : "opacity-100"}`} />
+          <FiSun className={`h-6 w-6 transition-opacity duration-300 ${theme === "light" ? "opacity-0" : "opacity-100"}`} />
           <FiMoon className={`h-6 w-6 absolute transition-opacity duration-300 ${theme === "dark" ? "opacity-100" : "opacity-0"}`} />
         </Button>
       </DropdownTrigger>
