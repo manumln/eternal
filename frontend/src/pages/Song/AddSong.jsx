@@ -120,11 +120,10 @@ const AddSong = () => {
                   <label htmlFor="preview" className="block text-sm font-medium">
                     Preview
                   </label>
-                  <Input
-                    type="file"
-                    onChange={(event) =>
-                      handleFileChange(event, setFieldValue, "preview")
-                    }
+                  <Field
+                    name="preview"
+                    as={Input}
+                    placeholder="Preview of the Song"
                   />
                 </div>
               </div>
