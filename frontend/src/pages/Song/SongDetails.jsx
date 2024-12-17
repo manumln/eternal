@@ -123,7 +123,7 @@ const SongDetails = () => {
                     <span className="text-gray-500 text-sm ml-3">{dateFormat(myReview.createdAt)}</span>
                   </div>
                 </div>
-                <Button variant="outline" className="ml-auto p-2 rounded-full" onClick={() => setIsEditing(prev => !prev)}>
+                <Button variant="outline" className=".ml-auto.min-w-20.p-2 rounded-full" onClick={() => setIsEditing(prev => !prev)}>
                   <FiPenTool size={20} />
                 </Button>
               </div>
