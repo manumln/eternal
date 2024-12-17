@@ -5,13 +5,14 @@ import { userRoleState, isAuthenticatedState } from "../../atoms/userData";
 import axios from "axios";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { FiEdit2 } from "react-icons/fi";
+import { FiEdit2, FiUserCheck, FiUserMinus, FiUserPlus } from "react-icons/fi";
 import { Avatar, Button, Card, Spinner } from "@nextui-org/react";
 
 const UserDetails = () => {
   const [user, setUser] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const [reviews, setReviews] = useState([]);
 
   const { userId } = useParams();
@@ -85,7 +86,7 @@ const UserDetails = () => {
   const canEdit = isLoggedIn && (loggedInUserId === userId || role === "admin");
 
   return (
-    <div className="flex flex-col items-center p-6 space-y-8 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
+    <div className="flex flex-col items-center p-6 space-y-8">
       <CardContainer>
         <motion.div
           className="text-center space-y-6"
@@ -109,13 +110,28 @@ const UserDetails = () => {
           {isLoggedIn && loggedInUserId !== userId && (
             <Button
               onClick={toggleFollow}
-              className={`mt-4 px-4 py-2 rounded-lg text-white transition-all duration-200 ${
-                isFollowing
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-blue-500 hover:bg-blue-600"
-              }`}
+              onMouseEnter={() => setIsHovering(true)} // Manejo de hover
+              onMouseLeave={() => setIsHovering(false)}
+              className={`mt-4 px-4 py-2  text-white transition-all duration-200 ${isHovering && isFollowing
+                  ? "bg-gradient-to-r from-red-500 to-orange-400"
+                  : isFollowing
+                    ? "bg-gradient-to-r from-green-500 to-teal-400"
+                    : "bg-blue-500"
+                }`}
             >
-              {isFollowing ? "Unfollow" : "Follow"}
+              {isHovering && isFollowing ? (
+                <>
+                  <FiUserMinus className="mr-2" /> Unfollow
+                </>
+              ) : isFollowing ? (
+                <>
+                  <FiUserCheck className="mr-2" /> Following
+                </>
+              ) : (
+                <>
+                  <FiUserPlus className="mr-2" /> Follow
+                </>
+              )}
             </Button>
           )}
         </motion.div>
@@ -169,14 +185,14 @@ const CardContainer = ({ children }) => (
 );
 
 const EmptyState = ({ message }) => (
-  <div className="text-center text-xl mt-20 text-gray-600 dark:text-gray-400">
+  <div className="text-center text-xl mt-20">
     {message}
   </div>
 );
 
 const ReviewCard = ({ review }) => (
   <motion.div
-    className="flex flex-col items-center justify-between p-6 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow w-full max-w-md mx-auto"
+    className="flex flex-col items-center justify-between p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow w-full max-w-md mx-auto"
     whileHover={{ scale: 1.05 }}
   >
     <img
@@ -196,9 +212,8 @@ const ReviewCard = ({ review }) => (
       {[...Array(5)].map((_, index) => (
         <span
           key={index}
-          className={`h-5 w-5 ${
-            review.rating > index ? "text-yellow-500" : "text-gray-300"
-          }`}
+          className={`h-5 w-5 ${review.rating > index ? "text-yellow-500" : "text-gray-300"
+            }`}
         >
           ★
         </span>

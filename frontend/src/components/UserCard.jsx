@@ -5,6 +5,8 @@ import { Avatar, Button, Card, Spinner } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { FiHeart, FiMoreVertical, FiStar } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import {GiShadowFollower} from "react-icons/gi";
+import {RiUserUnfollowFill} from "react-icons/ri";
 
 const UserCard = ({ user, loggedInUserId, handleReload }) => {
   const [isFollowing, setIsFollowing] = useState(user.followers.includes(loggedInUserId));
@@ -71,13 +73,12 @@ const UserCard = ({ user, loggedInUserId, handleReload }) => {
               count={user.followers.length}
             />
             <StatCard
-              icon={<FiStar size={20} />}
+              icon={<GiShadowFollower size={20} />}
               label="Following"
               count={user.following.length}
             />
           </motion.div>
 
-          {/* Follow/Unfollow button */}
           <div className="mt-4 flex justify-center">
             <Button
               onClick={toggleFollow}
@@ -88,7 +89,8 @@ const UserCard = ({ user, loggedInUserId, handleReload }) => {
               }`}
               disabled={isLoading}
             >
-              {isLoading ? "Processing..." : isFollowing ? "Unfollow" : "Follow"}
+              {isLoading ? "Processing..." : isFollowing ?
+                  "Unfollow" : "Follow"}
             </Button>
           </div>
 

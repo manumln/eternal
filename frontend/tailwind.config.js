@@ -1,4 +1,6 @@
 const {nextui} = require('@nextui-org/theme');
+import * as tailwindAnimate from "tailwindcss-animate"
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -38,6 +40,6 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"),require("@tailwindcss/aspect-ratio"),nextui()],
+  plugins: [tailwindAnimate,require("@tailwindcss/aspect-ratio"),nextui()],
   
 };
