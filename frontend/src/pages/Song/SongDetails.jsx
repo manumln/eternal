@@ -112,7 +112,8 @@ const SongDetails = () => {
           {isLoggedIn && myReview && (
             <Card className="w-full p-4 rounded-lg">
               <div className="flex items-center gap-3">
-                <Avatar className="h-12 w-12 rounded-full" src={myReview.userId.profileImage} alt="user" />
+                <Avatar className="h-12 w-12 cursor-pointer"
+                  src={myReview.userId.profileImage} alt="user" />
                 <div>
                   <h4 className="text-lg font-medium">{myReview.userId.firstName} {myReview.userId.lastName}</h4>
                   <div className="flex items-center gap-1">

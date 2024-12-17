@@ -10,7 +10,7 @@ const userRouter = require("./router/users");
 // List of allowed origins
 const allowedOrigins = [
   "https://eternal-music.vercel.app",
-  "http://localhost:5173/",
+  "http://localhost:5173",
 ];
 
 // CORS configuration
