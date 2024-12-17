@@ -1,8 +1,8 @@
-const {nextui} = require('@nextui-org/theme');
-import * as tailwindAnimate from "tailwindcss-animate"
+import { nextui } from "@nextui-org/theme";
+import tailwindAnimate from "tailwindcss-animate";
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{js,jsx}",
@@ -22,24 +22,47 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['Spotify', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        nimbus: ['Nimbus', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        sans: [
+          "Spotify",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif",
+        ],
+        nimbus: [
+          "Nimbus",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif",
+        ],
       },
       backgroundSize: {
-        '2900': '2900%',
-        '3000': '3000%',
+        "2900": "2900%",
+        "3000": "3000%",
       },
       animation: {
-        animate: 'animate 1s steps(29) 1',
+        animate: "animate 1s steps(29) 1",
       },
       keyframes: {
         animate: {
-          '0%': { backgroundPosition: 'left' },
-          '100%': { backgroundPosition: 'right' },
+          "0%": { backgroundPosition: "left" },
+          "100%": { backgroundPosition: "right" },
         },
       },
     },
   },
-  plugins: [tailwindAnimate,require("@tailwindcss/aspect-ratio"),nextui()],
-  
+  plugins: [
+    tailwindAnimate,
+    require("@tailwindcss/aspect-ratio"),
+    nextui(),
+  ],
 };
