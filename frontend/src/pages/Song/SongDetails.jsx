@@ -142,21 +142,17 @@ const SongDetails = () => {
           </div>
 
           {isLoggedIn && myReview && (
-            <Card className="w-full p-6 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-shadow duration-300">
+            <Card className="w-full p-6 hover:shadow-2xl transition-shadow duration-300">
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <Avatar
-                    className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-gray-300 cursor-pointer"
+                    className="h-10 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-gray-300 cursor-pointer"
                     src={
                       myReview.userId.profileImage ||
                       "/path/to/default-avatar.png"
                     }
                     alt="user"
                   />
-                  {/* Fallback: Si la imagen no se carga, muestra un color de fondo o inicial */}
-                  {/* <div className="absolute inset-0 flex justify-center items-center text-white font-bold bg-gray-300 rounded-full"> */}
-                  {/*   {myReview.userId.firstName[0]}{myReview.userId.lastName[0]} */}
-                  {/* </div> */}
                 </div>
                 <div className="flex flex-col">
                   <h4 className="text-xl font-semibold text-gray-900">
