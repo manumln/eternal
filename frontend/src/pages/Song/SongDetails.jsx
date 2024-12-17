@@ -133,7 +133,7 @@ const SongDetails = () => {
                   </div>
                 </div>
                 <Button variant="outline" className=".ml-auto.min-w-20.p-2 rounded-full" onClick={() => setIsEditing(prev => !prev)}>
-                  <FiPenTool size={20} />
+                  <FiEdit2 size={20} />
                 </Button>
               </div>
               <blockquote className="mt-2 text-sm sm:text-base">{myReview.content}</blockquote>
