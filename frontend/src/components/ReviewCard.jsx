@@ -160,11 +160,16 @@ const ReviewCard = ({
   return (
     <Card className="flex flex-col p-3 sm:p-4 mt-4 w-full overflow-y-auto">
       <div className="flex items-center w-full gap-2 pb-2">
+      <a
+          href={`/users/${review.userId._id}`}
+          className="flex items-center gap-2"
+        >
         <Avatar
           src={review.userId.profileImage}
           alt="user"
           className="h-10 w-10"
         />
+        </a>
         <div className="flex flex-col items-start">
           <h4 className="text-lg font-medium tracking-tight">
             {review.userId.firstName + " " + review.userId.lastName}

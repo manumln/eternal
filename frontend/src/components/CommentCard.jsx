@@ -166,11 +166,16 @@ const Commentcard = ({
   return (
     <div className="flex flex-col mt-2">
       <div className="flex items-center h-12 w-full gap-2">
+      <a
+          href={`/users/${review.userId._id}`}
+          className="flex items-center gap-2"
+        >
         <Avatar
           src={comment.userId.profileImage}
           alt="user"
           className="h-10 w-10"
         />
+        </a>
         <div className="flex flex-col items-start">
           <h4 className="text-sm font-medium tracking-tight">
             {comment.userId.firstName + " " + comment.userId.lastName}
