@@ -35,7 +35,6 @@ const IntroductionPage = () => {
       setReviews(response.data.reviews);
     } catch (error) {
       console.error(error); 
-      toast.error("Failed to load followed reviews");
     } finally {
       setIsLoading(false);
     }
