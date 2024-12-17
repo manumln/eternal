@@ -39,10 +39,13 @@ const Commentcard = ({
   // is Comment Liked by the User
   const [replyCount, setReplyCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(comment.likes || 0); // Added likes count
   useEffect(() => {
     setReplyCount(comment.replies.length);
-    if (!isUserLoading && comment)
+    if (!isUserLoading && comment) {
       setIsLiked(likedComments.includes(comment._id));
+      setLikesCount(comment.likes); // Update the likes count
+    }
   }, [likedComments, comment]);
 
   // Trigger for Children to refetch replies
@@ -136,7 +139,6 @@ const Commentcard = ({
   const toggleLike = async () => {
     if (!!role) {
       setIsLikeLoading(true);
-
       axios
         .post(
           `${
@@ -151,6 +153,7 @@ const Commentcard = ({
         )
         .then((response) => {
           setIsLiked(!isLiked);
+          setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1)); // Update likes count
         })
         .catch((error) => toast.error(error.response.data.message))
         .finally(() => setIsLikeLoading(false));
@@ -163,7 +166,7 @@ const Commentcard = ({
   return (
     <div className="flex flex-col mt-2">
       <div className="flex items-center h-12 w-full gap-2">
-      <Avatar
+        <Avatar
           src={comment.userId.profileImage}
           alt="user"
           className="h-10 w-10"
@@ -183,13 +186,14 @@ const Commentcard = ({
       <div
         className={
           showReplies && replyCount > 0 ? "border-l-2 ml-5 pl-6" : "ml-11"
-        }>
+        }
+      >
         <blockquote className="italic text-sm ml-1">
           {comment.content}
         </blockquote>
 
         <div className="flex gap-2 items-center my-2">
-        <Button
+          <Button
             variant="outline"
             className={`gap-2 p-2 ${
               isLiked && "bg-gradient-to-r from-blue-500 to-teal-400 text-white"
@@ -204,6 +208,11 @@ const Commentcard = ({
             )}
             <span className="hidden md:flex">{isLiked ? "Liked" : "Like"}</span>
           </Button>
+
+          <div className="flex items-center gap-1 ml-4">
+            <span className="text-sm">{likesCount}</span>
+            <AiFillHeart className="text-red-500 text-sm" />
+          </div>
 
           <Button
             variant="outline"
@@ -239,7 +248,8 @@ const Commentcard = ({
                   variant="outline"
                   title="delete"
                   size="sm"
-                  className="flex rounded-full py-2 px-2 gap-2">
+                  className="flex rounded-full py-2 px-2 gap-2"
+                >
                   <FiTrash2 size={20} />
                 </Button>
               </AlertDialogTrigger>
@@ -278,11 +288,14 @@ const Commentcard = ({
             />
             {isLoading ? (
               <Button disabled className="mt-2 bg-slate-200 text-slate-800">
-                <Spinner/>
+                <Spinner />
                 Please wait
               </Button>
             ) : (
-              <Button type="submit" className="mt-2 bg-gradient-to-r from-blue-500 to-teal-400 text-white">
+              <Button
+                type="submit"
+                className="mt-2 bg-gradient-to-r from-blue-500 to-teal-400 text-white"
+              >
                 Reply
               </Button>
             )}
@@ -291,7 +304,7 @@ const Commentcard = ({
 
         {showReplies && isReplyLoading ? (
           <div className="w-full">
-            <Spinner/>
+            <Spinner />
           </div>
         ) : (
           showReplies &&

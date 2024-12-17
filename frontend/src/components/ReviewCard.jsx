@@ -44,6 +44,7 @@ const ReviewCard = ({
   // Liking Reply
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(review.likes || 0);
   const toggleLike = async () => {
     if (!!role) {
       setIsLikeLoading(true);
@@ -62,11 +63,11 @@ const ReviewCard = ({
         .then((response) => {
           setIsLikeLoading(false);
           setIsLiked(!isLiked);
+          setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1));
         })
         .catch((error) => toast.error(error.response.data.message))
         .finally(() => setIsLikeLoading(false));
     } else {
-      setIsLiked(!isLiked);
       toast.error("You need to be logged in");
     }
   };
@@ -209,6 +210,11 @@ const ReviewCard = ({
             )}
             <span className="hidden md:flex">{isLiked ? "Liked" : "Like"}</span>
           </Button>
+          <div className="flex items-center gap-1 ml-4">
+            <span className="text-sm">{likesCount}</span>
+            <AiFillHeart className="text-red-500 text-sm" />
+          </div>
+          
           <Button
             variant="outline"
             className="gap-2 p-2"
@@ -284,7 +290,10 @@ const ReviewCard = ({
                 Please wait
               </Button>
             ) : (
-              <Button type="submit" className="mt-2 bg-gradient-to-r from-blue-500 to-teal-400 text-white">
+              <Button
+                type="submit"
+                className="mt-2 bg-gradient-to-r from-blue-500 to-teal-400 text-white"
+              >
                 Reply
               </Button>
             )}
