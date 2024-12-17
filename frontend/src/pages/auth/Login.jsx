@@ -9,12 +9,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import logo from "../../images/logo.png";
+import { Icon } from "@mui/material";
 
 export default function LoginForm() {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isAuthenticatedState);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = React.useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -48,7 +56,8 @@ export default function LoginForm() {
 
   const inputClasses = "relative";
   const errorClasses = "text-red-600 absolute -bottom-5 left-1";
-  const buttonClasses = "bg-gradient-to-r from-blue-500 to-green-500 hover:opacity-90 transition-opacity shadow-lg";
+  const buttonClasses =
+    "bg-gradient-to-r from-blue-500 to-green-500 hover:opacity-90 transition-opacity shadow-lg";
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen px-6 bg-gradient-to-br from-blue-600 to-green-500">
@@ -62,32 +71,50 @@ export default function LoginForm() {
             <div className={inputClasses}>
               <Input
                 id="email"
-                labelPlaceholder="Email"
-                placeholder="name@example.com"
-                type="email"
+                isRequired
+                label="Email"
+                name="email"
+                placeholder="Enter your email"
                 {...register("email")}
                 disabled={isLoading}
                 fullWidth
+                type="email"
                 clearable
-                className="text-black"
+                variant="bordered"
               />
               {errors.email && (
-                <small className={errorClasses}>
-                  {errors.email.message}
-                </small>
+                <small className={errorClasses}>{errors.email.message}</small>
               )}
             </div>
 
             <div className={inputClasses}>
               <Input
                 id="password"
-                labelPlaceholder="Password"
+                label="Password"
+                name="password"
                 placeholder="Enter your password"
-                type="password"
+                type={isVisible ? "text" : "password"}
                 {...register("password")}
                 disabled={isLoading}
                 fullWidth
+                variant="bordered"
                 clearable
+                isRequired
+                endContent={
+                  <button type="button" onClick={toggleVisibility}>
+                    {isVisible ? (
+                      <Icon
+                        className="pointer-events-none text-2xl text-default-400"
+                        icon="solar:eye-closed-linear"
+                      />
+                    ) : (
+                      <Icon
+                        className="pointer-events-none text-2xl text-default-400"
+                        icon="solar:eye-bold"
+                      />
+                    )}
+                  </button>
+                }
               />
               {errors.password && (
                 <small className={errorClasses}>
@@ -107,7 +134,11 @@ export default function LoginForm() {
             </Button>
 
             <div className="flex justify-between items-center pt-6 text-sm">
-              <Link href="/signup" underline className="underline hover:text-blue-600">
+              <Link
+                href="/signup"
+                underline
+                className="underline hover:text-blue-600"
+              >
                 Sign Up
               </Link>
             </div>
