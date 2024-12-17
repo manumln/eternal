@@ -97,7 +97,7 @@ const SongDetails = () => {
 
   return (
     <div className="flex flex-col items-center p-4 sm:p-6 gap-6">
-      <Card className="flex flex-col lg:flex-row gap-6 w-full max-w-6xl mx-auto p-6 shadow-lg bg-white rounded-lg">
+      <Card className="flex flex-col lg:flex-row gap-6 w-full max-w-6xl mx-auto p-6">
         <div className="flex flex-col items-center sm:sticky sm:top-[81px] pb-2">
           <Image loading="lazy" src={image} alt="Song cover" className="rounded-lg object-cover w-full h-auto max-w-lg" />
         </div>
@@ -110,7 +110,7 @@ const SongDetails = () => {
           </div>
 
           {isLoggedIn && myReview && (
-            <Card className="w-full p-4 border-t-2 border-gray-300 rounded-lg">
+            <Card className="w-full p-4 rounded-lg">
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12 rounded-full" src={myReview.userId.profileImage} alt="user" />
                 <div>
@@ -138,7 +138,7 @@ const SongDetails = () => {
             <Button
               variant="bordered"
               title={isLiked ? "Remove from Favorites" : "Add to Favorites"}
-              className={`flex p-3 rounded-md transition-all ${isLiked ? "bg-gradient-to-r from-red-500 to-orange-400 text-white shadow-md" : "bg-white hover:bg-gray-100"}`}
+              className={`flex p-3 rounded-md transition-all ${isLiked ? "bg-gradient-to-r from-red-500 to-orange-400 text-white shadow-md" : "bg-white"}`}
               onClick={toggleFavorite}
             >
               {isHeartLoading ? <Spinner color="white" strokeWidth={2.5} opacity={0.5} className="w-8 h-8 animate-spin" /> : <AiFillHeart size={20} color={isLiked ? "white" : "red"} />}
