@@ -9,7 +9,7 @@ const userRouter = require("./router/users");
 
 app.use(
   cors({
-    origin: "https://eternal-green.vercel.app", // Cambia este origen al dominio de tu frontend en producción
+    origin: "https://eternal-green.vercel.app/", // Cambia este origen al dominio de tu frontend en producción
     methods: ["GET", "POST", "PUT", "DELETE"], // Métodos HTTP permitidos
     credentials: true, // Habilitar cookies y encabezados de autenticación
   })
