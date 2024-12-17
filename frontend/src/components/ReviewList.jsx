@@ -87,7 +87,7 @@ const ReviewList = ({ song, userReplyCounter, setUserReplyCounter }) => {
 
   return (
     <section className="w-full max-w-6xl mx-auto mt-8 space-y-6">
-      <h2 className="text-3xl font-semibold text-gray-800">
+      <h2 className="text-3xl font-semibold">
         Community Reviews
       </h2>
 
