@@ -138,7 +138,7 @@ const SongDetails = () => {
             <Button
               variant="bordered"
               title={isLiked ? "Remove from Favorites" : "Add to Favorites"}
-              className={`flex p-3 rounded-md transition-all ${isLiked ? "bg-gradient-to-r from-red-500 to-orange-400 shadow-md" : "bg-white"}`}
+              className={`flex p-3 rounded-md transition-all ${isLiked ? "bg-gradient-to-r from-red-500 to-orange-400 shadow-md" : ""}`}
               onClick={toggleFavorite}
             >
               {isHeartLoading ? <Spinner color="white" strokeWidth={2.5} opacity={0.5} className="w-8 h-8 animate-spin" /> : <AiFillHeart size={20} color={isLiked ? "white" : "red"} />}
