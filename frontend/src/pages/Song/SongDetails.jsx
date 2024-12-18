@@ -155,7 +155,7 @@ const SongDetails = () => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <h4 className="text-xl font-semibold text-gray-900">
+                  <h4 className="text-xl font-semibold">
                     {myReview.userId.firstName} {myReview.userId.lastName}
                   </h4>
                   <div className="flex items-center gap-2 mt-1">
