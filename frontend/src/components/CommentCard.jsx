@@ -167,7 +167,7 @@ const Commentcard = ({
     <div className="flex flex-col mt-2">
       <div className="flex items-center h-12 w-full gap-2">
       <a
-          href={`/users/${review.userId._id}`}
+          href={`/users/${comment.userId._id}`}
           className="flex items-center gap-2"
         >
         <Avatar

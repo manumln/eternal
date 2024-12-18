@@ -133,7 +133,7 @@ const SongDetails = () => {
         </div>
 
         <div className="space-y-4 w-full">
-          <h1 className="text-3xl font-bold text-transparent bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text leading-tight">
+          <h1 className="text-6xl font-bold  bg-clip-text leading-tight">
             {song.title}
           </h1>
           <div className="flex items-center gap-2 text-lg">
@@ -146,7 +146,7 @@ const SongDetails = () => {
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <Avatar
-                    className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-gray-300 cursor-pointer"
+                    className="h-10 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-gray-300 cursor-pointer"
                     src={
                       myReview.userId.profileImage ||
                       "/path/to/default-avatar.png"
@@ -296,7 +296,6 @@ const SongDetails = () => {
             src={song.preview}
             autoPlay={false}
             controls
-            className="audio-player custom-audio-player"
           />
         </div>
       )}
