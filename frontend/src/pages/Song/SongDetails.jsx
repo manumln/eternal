@@ -27,6 +27,7 @@ import {
   AlertDialogTrigger,
 } from "../../components/ui/alert-dialog";
 import { FiEdit2, FiPenTool, FiStar, FiTrash2 } from "react-icons/fi";
+import ColorThief from "colorthief";
 
 // Lazy-loaded components
 const ReviewList = lazy(() => import("@/components/ReviewList"));
@@ -40,6 +41,9 @@ const SongDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [counter, setCounter] = useState(0);
 
+  const [titleColor, setTitleColor] = useState("#000");
+  const img = new window.Image(); // Asegura que uses el constructor global
+
   const { song, isDetailLoading } = useGetSong();
   const isLoggedIn = useRecoilValue(isAuthenticatedState);
   const role = useRecoilValue(userRoleState);
@@ -47,6 +51,28 @@ const SongDetails = () => {
     userFavouriteSongsState
   );
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const extractColor = async () => {
+      if (song?.image_url) {
+        const img = new window.Image(); // Usa el constructor global
+        img.crossOrigin = "anonymous"; // Permitir carga cruzada
+        img.src = song.image_url;
+
+        img.onload = () => {
+          const colorThief = new ColorThief();
+          const color = colorThief.getColor(img); // Obtén el color como [R, G, B]
+          setTitleColor(`rgb(${color[0]}, ${color[1]}, ${color[2]})`);
+        };
+
+        img.onerror = (err) => {
+          console.error("Error loading image for color extraction:", err);
+        };
+      }
+    };
+
+    extractColor();
+  }, [song]);
 
   // Set initial "liked" state based on current favorites
   useEffect(() => {
@@ -133,7 +159,10 @@ const SongDetails = () => {
         </div>
 
         <div className="space-y-4 w-full">
-          <h1 className="text-6xl font-bold  bg-clip-text leading-tight">
+          <h1
+            className="text-6xl font-bold bg-clip-text leading-tight"
+            style={{ color: titleColor }}
+          >
             {song.title}
           </h1>
           <div className="flex items-center gap-2 text-lg">
@@ -179,7 +208,7 @@ const SongDetails = () => {
                   <FiEdit2 size={20} />
                 </Button>
               </div>
-              <blockquote className="mt-3 text-sm sm:text-base text-gray-700 italic">
+              <blockquote className="mt-3 text-sm sm:text-base">
                 {myReview.content}
               </blockquote>
             </Card>
@@ -292,11 +321,7 @@ const SongDetails = () => {
       {song?.preview?.trim() && (
         <div className="mt-4 w-full max-w-6xl mx-auto p-6 bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg shadow-lg">
           <h3 className="text-xl font-semibold text-white mb-4">Preview</h3>
-          <AudioPlayer
-            src={song.preview}
-            autoPlay={false}
-            controls
-          />
+          <AudioPlayer src={song.preview} autoPlay={false} controls />
         </div>
       )}
 

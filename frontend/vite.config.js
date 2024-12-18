@@ -12,4 +12,7 @@ export default defineConfig({
       "process.env": process.env,
     },
   },
+  optimizeDeps: {
+    include: ["node-vibrant"],
+  },
 });
