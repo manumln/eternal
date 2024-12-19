@@ -157,22 +157,19 @@ module.exports.getFollowedReviews = async (req, res) => {
   const { userId } = req;
 
   try {
-    const user = await User.findById(userId).populate("following", "_id");
+    const user = await User.findById(userId).select("following");
     if (!user) throw new ExpressError(404, "User not found");
 
-    const reviews = await Review.find({
-      userId: { $in: user.following.map((f) => f._id) },
-    })
-      .populate("userId", "firstName lastName profileImage")
-      .sort({ createdAt: -1 });
+    const reviews = await Review.find({ userId: { $in: user.following } })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .populate("userId", "firstName lastName profileImage");
 
     res.status(200).json({ reviews });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error fetching followed reviews",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Error fetching followed reviews",
+      error: error.message,
+    });
   }
 };
