@@ -41,5 +41,4 @@ router.put("/:userId/follow", authorization, asyncHandler(toggleFollowUser));
 
 router.get("/feed", authorization, asyncHandler(getFollowedReviews));
 
-
 module.exports = router;

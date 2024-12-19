@@ -17,8 +17,6 @@ const AddSong = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [previewURL, setPreviewURL] = useState("");
-  const [genres, setGenres] = useState([]);
-  const [newGenre, setNewGenre] = useState("");
 
   const initialValues = {
     title: "",
@@ -64,33 +62,6 @@ const AddSong = () => {
       toast.error(error.response?.data?.message || "An error occurred.");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const fetchGenres = async () => {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/genres`
-      );
-      setGenres(response.data.genres);
-    };
-    fetchGenres();
-  }, []);
-
-  const handleAddGenre = async () => {
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/genres`,
-        { name: newGenre },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      setGenres([...genres, response.data.genre]);
-      setNewGenre("");
-      toast.success("Genre added successfully.");
-    } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred.");
     }
   };
 
@@ -146,10 +117,7 @@ const AddSong = () => {
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="preview"
-                    className="block text-sm font-medium"
-                  >
+                  <label htmlFor="preview" className="block text-sm font-medium">
                     Preview
                   </label>
                   <Field
@@ -169,34 +137,6 @@ const AddSong = () => {
                   />
                 </div>
               )}
-
-              <div>
-                <label htmlFor="genre" className="block text-sm font-medium">
-                  Genre
-                </label>
-                <Field
-                  as="select"
-                  name="genre"
-                  className="border rounded w-full p-2"
-                  placeholder="Select a Genre"
-                >
-                  <option value="">Select a genre</option>
-                  {genres.map((genre) => (
-                    <option key={genre._id} value={genre._id}>
-                      {genre.name}
-                    </option>
-                  ))}
-                </Field>
-                <div className="mt-2">
-                  <Input
-                    type="text"
-                    placeholder="Add new genre"
-                    value={newGenre}
-                    onChange={(e) => setNewGenre(e.target.value)}
-                  />
-                  <Button onClick={handleAddGenre}>Add Genre</Button>
-                </div>
-              </div>
               <footer className="border-t border-gray-200 px-6 py-4 flex justify-end">
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? (

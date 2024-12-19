@@ -9,7 +9,6 @@ import { AiOutlineLogout } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
-import ReviewsFeed from "@/components/ReviewsFeed";
 
 const IntroductionPage = () => {
   const role = useRecoilValue(userRoleState);

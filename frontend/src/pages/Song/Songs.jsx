@@ -32,7 +32,6 @@ const Songs = () => {
       setSongs(response.data.songs);
       setTotalPages(response.data.totalPages);
     } catch (error) {
-      console.error("Error fetching songs:", error);
     } finally {
       setIsLoading(false);
     }

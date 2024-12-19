@@ -1,6 +1,5 @@
 const express = require("express");
 const songController = require("../controller/songs.js");
-console.log("songController:", songController);
 const asyncHandler = require("express-async-handler");
 const router = express.Router();
 const { authorization } = require("../middleware/auth.js");
@@ -23,6 +22,12 @@ const {
   likeComment,
 } = require("../controller/comments.js");
 
+const {
+  getGenres,
+  createGenre,
+} = require("../controller/genres.js");
+
+// Routes for songs
 router
   .route("/")
   .get(asyncHandler(songController.getAllSongs))
@@ -42,6 +47,7 @@ router
   )
   .delete(authorization, asyncHandler(songController.deleteSong));
 
+// Routes for reviews
 router
   .route("/:id/reviews")
   .get(asyncHandler(getAllReviews))
@@ -58,6 +64,7 @@ router
   .put(authorization, asyncHandler(updateReview))
   .delete(authorization, asyncHandler(deleteReview));
 
+// Routes for comments on reviews
 router
   .route("/:songId/reviews/:reviewId/comments")
   .get(asyncHandler(getComments))
@@ -69,8 +76,13 @@ router
   .post(authorization, asyncHandler(createNestedComment))
   .delete(authorization, asyncHandler(deleteComment));
 
-  router
+router
   .route("/:id/reviews/:reviewId/comments/:commentId/like")
   .post(authorization, asyncHandler(likeComment));
+
+// Routes for genres
+router.route("/genres")
+  .get(asyncHandler(getGenres))
+  .post(authorization, asyncHandler(createGenre));
 
 module.exports = router;
