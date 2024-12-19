@@ -152,24 +152,27 @@ module.exports.likeReview = async (req, res) => {
       .json({ message: "Error liking review", error: error.message });
   }
 };
-
 module.exports.getFollowedReviews = async (req, res) => {
   const { userId } = req;
 
   try {
-    const user = await User.findById(userId).select("following");
+    // Obtener el usuario actual junto con la lista de personas que sigue
+    const user = await User.findById(userId).populate("following", "_id");
+
     if (!user) throw new ExpressError(404, "User not found");
 
-    const reviews = await Review.find({ userId: { $in: user.following } })
-      .sort({ createdAt: -1 })
-      .limit(20)
-      .populate("userId", "firstName lastName profileImage");
+    // Obtener los IDs de los usuarios que sigue
+    const followingIds = user.following.map((follow) => follow._id);
+
+    // Buscar reviews recientes de los usuarios que sigue
+    const reviews = await Review.find({ userId: { $in: followingIds } })
+      .populate("userId", "firstName lastName profileImage")
+      .populate("songId", "title artist")
+      .sort({ createdAt: -1 }) // Ordenar por las más recientes
+      .limit(20); // Limitar la cantidad de resultados (opcional)
 
     res.status(200).json({ reviews });
   } catch (error) {
-    res.status(500).json({
-      message: "Error fetching followed reviews",
-      error: error.message,
-    });
+    res.status(500).json({ message: "Error fetching followed reviews", error: error.message });
   }
 };

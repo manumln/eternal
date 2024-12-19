@@ -1,6 +1,7 @@
 const Song = require("../models/songs");
 const Review = require("../models/review");
 const User = require("../models/users");
+const Genre = require("../models/songs");
 const ExpressError = require("../utils/ExpressErrors");
 const { deleteCommentAndReplies } = require("./comments");
 
@@ -111,4 +112,33 @@ module.exports.updateSong = async (req, res) => {
   const current = await Song.findByIdAndUpdate(id, body, { new: true });
 
   res.json({ previous, current, message: `Song Updated` });
+};
+
+module.exports.getGenres = async (req, res) => {
+  const genres = await Genre.find();
+  res.json({ genres });
+};
+
+module.exports.createGenre = async (req, res) => {
+  const { name } = req.body;
+  if (!name) throw new ExpressError(400, "Genre name is required");
+  const genre = new Genre({ name });
+  await genre.save();
+  res.json({ genre, message: `Genre '${name}' created successfully.` });
+};
+
+module.exports.createSong = async (req, res) => {
+  const { role } = req;
+  if (role !== "admin") {
+    throw new ExpressError(401, "You are not Authorized to Add Song");
+  }
+  
+  const { title, artist, genre, image_url, preview } = req.body;
+  const genreExists = await Genre.findById(genre);
+  if (!genreExists) throw new ExpressError(400, "Invalid genre selected");
+
+  const song = new Song({ title, artist, genre, image_url, preview });
+  await song.save();
+
+  res.json({ song, message: `New Song: ${song.title} Added` });
 };
