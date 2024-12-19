@@ -102,7 +102,6 @@ const IntroductionPage = () => {
             )}
           </motion.div>
         </Card>
-        <ReviewsFeed />
       </motion.div>
     </div>
   );
