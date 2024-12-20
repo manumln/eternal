@@ -1,4 +1,4 @@
-import { Button, Card, Input, Spinner } from "@nextui-org/react";
+import { Button, Card, Input, Spinner, Select, SelectItem } from "@nextui-org/react";
 import { Formik, Field, Form } from "formik";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 const SongSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   artist: Yup.string().required("Artist is required"),
+  genre: Yup.string().required("Genre is required"), // Added genre validation
   image: Yup.mixed().notRequired(),
   preview: Yup.mixed().notRequired(),
 });
@@ -18,9 +19,12 @@ const AddSong = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [previewURL, setPreviewURL] = useState("");
 
+  const genres = ["Pop", "Rock", "Hip-hop", "Jazz", "Classical"]; // Example genres
+
   const initialValues = {
     title: "",
     artist: "",
+    genre: "", // Added genre field
     description: "",
     image: null,
     preview: null,
@@ -105,6 +109,35 @@ const AddSong = () => {
                     <div className="text-red-500 text-sm">{errors.artist}</div>
                   )}
                 </div>
+
+                {/* Genre Select */}
+                <div>
+                  <label htmlFor="genre" className="block text-sm font-medium">
+                    Genre
+                  </label>
+                  <Field name="genre">
+                    {({ field, form }) => (
+                      <Select
+                        {...field}
+                        label="Select Genre"
+                        className="w-full"
+                        onChange={(value) =>
+                          form.setFieldValue(field.name, value)
+                        }
+                      >
+                        {genres.map((genre) => (
+                          <SelectItem key={genre.key} value={genre.key}>
+                            {genre.label}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    )}
+                  </Field>
+                  {errors.genre && touched.genre && (
+                    <div className="text-red-500 text-sm">{errors.genre}</div>
+                  )}
+                </div>
+
                 <div>
                   <label htmlFor="image" className="block text-sm font-medium">
                     Image
@@ -117,7 +150,10 @@ const AddSong = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="preview" className="block text-sm font-medium">
+                  <label
+                    htmlFor="preview"
+                    className="block text-sm font-medium"
+                  >
                     Preview
                   </label>
                   <Field

@@ -1,4 +1,11 @@
-import { Button, Card, Input, Spinner } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Input,
+  Spinner,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import { Formik, Field, Form } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,10 +13,13 @@ import axios from "axios";
 import * as Yup from "yup";
 import { toast } from "sonner";
 
+// Validación de formulario
 const SongSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   artist: Yup.string().required("Artist is required"),
-  image: Yup.mixed().notRequired(),
+  genres: Yup.array()
+    .of(Yup.string().required("Genre is required"))
+    .min(1, "At least one genre is required"), // Al menos un género requerido  image: Yup.mixed().notRequired(),
   preview: Yup.mixed().notRequired(),
 });
 
@@ -17,25 +27,44 @@ const EditSong = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [genres, setGenres] = useState([]); // Estado para los géneros
   const [initialValues, setInitialValues] = useState({
     title: "",
     artist: "",
+    genres: [],
     description: "",
     image: null,
     preview: null,
   });
   const [previewURL, setPreviewURL] = useState("");
 
+  // Cargar géneros desde la base de datos
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/genres`
+        );
+        setGenres(response.data.genres);
+      } catch (error) {
+        toast.error("Failed to fetch genres.");
+      }
+    };
+    fetchGenres();
+  }, []);
+
+  // Cargar datos de la canción a editar
   useEffect(() => {
     const fetchSong = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/songs/${id}`
         );
-        const song = response.data;
+        const song = response.data.song;
         setInitialValues({
           title: song.title,
           artist: song.artist,
+          genre: song.genre, // Obtener el género de la canción
           image: null,
           preview: null,
         });
@@ -57,13 +86,31 @@ const EditSong = () => {
       reader.readAsDataURL(file);
     }
   };
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/genres`
+        );
+
+        setGenres(response.data.genres);
+      } catch (error) {
+        console.error("Error fetching genres:", error); // Log the error for debugging
+        toast.error("Failed to fetch genres.");
+      }
+    };
+
+    fetchGenres();
+  }, []);
 
   const handleSubmit = async (values) => {
     setIsLoading(true);
     try {
       const formData = new FormData();
       Object.keys(values).forEach((key) => {
-        if (values[key]) {
+        if (Array.isArray(values[key])) {
+          values[key].forEach((item) => formData.append(`${key}[]`, item));
+        } else {
           formData.append(key, values[key]);
         }
       });
@@ -129,6 +176,33 @@ const EditSong = () => {
                   )}
                 </div>
                 <div>
+                  <label htmlFor="genres" className="block text-sm font-medium">
+                    Genres
+                  </label>
+                  <Field name="genres">
+                    {({ field, form }) => (
+                      <Select
+                        className="w-full"
+                        label="Select Genres"
+                        placeholder="Select one or more genres"
+                        selectionMode="multiple"
+                        selectedKeys={values.genres} // Pasar los géneros seleccionados al Select
+                        onSelectionChange={
+                          (keys) =>
+                            form.setFieldValue(field.name, Array.from(keys)) // Actualizar el estado con las selecciones
+                        }
+                      >
+                        {genres.map((genre) => (
+                          <SelectItem key={genre._id}>{genre.name}</SelectItem>
+                        ))}
+                      </Select>
+                    )}
+                  </Field>
+                  {errors.genres && touched.genres && (
+                    <div className="text-red-500 text-sm">{errors.genres}</div>
+                  )}
+                </div>
+                <div>
                   <label htmlFor="image" className="block text-sm font-medium">
                     Image
                   </label>
@@ -140,7 +214,10 @@ const EditSong = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="preview" className="block text-sm font-medium">
+                  <label
+                    htmlFor="preview"
+                    className="block text-sm font-medium"
+                  >
                     Preview
                   </label>
                   <Input

@@ -13,6 +13,8 @@ const {
   getReview,
 } = require("../controller/reviews.js");
 
+const genreController = require("../controller/genres.js"); // Import the genre controller
+
 const {
   getComments,
   createComment,

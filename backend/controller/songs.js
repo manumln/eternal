@@ -43,7 +43,13 @@ module.exports.createSong = async (req, res) => {
     throw new ExpressError(401, "You are not Authorized to Add Song");
   }
   
+
   const body = req.body;
+
+  if (!body.genres || body.genres.length === 0) {
+    throw new ExpressError(400, "Genres are required");
+  }
+
   if (req.file) {
     let url = req.file.path;
     body.image_url = url.startsWith("public") ? `${BASE_URL}/${url}` : url;

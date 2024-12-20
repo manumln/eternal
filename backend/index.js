@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const songRouter = require("./router/song");
 const userRouter = require("./router/users");
+const genreRouter = require("./router/genres");
 
 // List of allowed origins
 const allowedOrigins = [
@@ -45,6 +46,9 @@ app.use(express.urlencoded({ extended: false }));
 // Routers
 app.use("/songs", songRouter);
 app.use("/users", userRouter);
+
+app.use("/genres", genreRouter);
+
 
 // Home route
 app.get("/", (req, res) => {

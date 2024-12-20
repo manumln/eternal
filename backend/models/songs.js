@@ -17,6 +17,10 @@ const songSchema = new mongoose.Schema({
   preview: {
     type: String,
   },
+  genres: {
+    type: [String], 
+    required: true,
+  },
 });
 
 const Song = mongoose.model("Song", songSchema);

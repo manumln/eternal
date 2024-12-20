@@ -29,8 +29,13 @@ const UserDetails = () => {
       try {
         const [userResponse, reviewsResponse] = await Promise.all([
           axios.get(`${import.meta.env.VITE_BACKEND_URL}/users/${userId}`),
-          axios.get(`${import.meta.env.VITE_BACKEND_URL}/users/${userId}/reviews`),
+          axios.get(
+            `${import.meta.env.VITE_BACKEND_URL}/users/${userId}/reviews`
+          ),
         ]);
+
+        console.log("User Response:", userResponse.data);
+        console.log("Reviews Response:", reviewsResponse.data);
 
         const fetchedUser = userResponse.data.user;
         setUser(fetchedUser);
@@ -66,7 +71,9 @@ const UserDetails = () => {
           : [...prevUser.followers, loggedInUserId],
       }));
     } catch (err) {
-      toast.error(err.response?.data?.message || "Error toggling follow status");
+      toast.error(
+        err.response?.data?.message || "Error toggling follow status"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -98,13 +105,17 @@ const UserDetails = () => {
             transition={{ duration: 0.5 }}
           >
             <Avatar
-              src={user.profileImage || `https://api.multiavatar.com/${user._id}.svg`}
+              src={
+                user.profileImage ||
+                `https://api.multiavatar.com/${user._id}.svg`
+              }
               alt="Profile Image"
               className="w-36 h-36 mx-auto rounded-full shadow-xl"
             />
-            <h2 className="text-3xl font-semibold text-gray-900">{user.firstName} {user.lastName}</h2>
+            <h2 className="text-3xl font-semibold text-gray-900">
+              {user.firstName} {user.lastName}
+            </h2>
             {user.bio && <p className="text-sm text-gray-600">{user.bio}</p>}{" "}
-
             <div className="grid grid-cols-2 gap-4 mt-6">
               <StatCard label="Followers" count={user.followers.length} />
               <StatCard label="Following" count={user.following.length} />
@@ -181,9 +192,7 @@ const StatCard = ({ label, count }) => (
 );
 
 const CardContainer = ({ children }) => (
-  <Card className="w-full p-6 shadow-lg rounded-lg bg-white">
-    {children}
-  </Card>
+  <Card className="w-full p-6">{children}</Card>
 );
 
 const EmptyState = ({ message }) => (
@@ -198,6 +207,24 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
   const [isLoading, setIsLoading] = useState(true);
   const loggedInUserId = localStorage.getItem("userId");
 
+  const getReviews = async (req, res) => {
+    try {
+      const reviews = await Review.find({ userId: req.params.userId })
+        .populate({
+          path: "songId", // Asegúrate de que 'songId' sea el campo que contiene la referencia
+          populate: {
+            path: "genres", // Asegúrate de que 'genres' sea el campo que contiene la referencia al género
+            select: "name", // Solo selecciona el nombre del género
+          },
+        })
+        .exec();
+
+      res.status(200).json({ reviews });
+    } catch (err) {
+      res.status(500).json({ message: "Error fetching reviews", error: err });
+    }
+  };
+
   const { userId } = useParams();
 
   useEffect(() => {
@@ -205,7 +232,9 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
       try {
         const [userResponse, reviewsResponse] = await Promise.all([
           axios.get(`${import.meta.env.VITE_BACKEND_URL}/users/${userId}`),
-          axios.get(`${import.meta.env.VITE_BACKEND_URL}/users/${userId}/reviews`),
+          axios.get(
+            `${import.meta.env.VITE_BACKEND_URL}/users/${userId}/reviews`
+          ),
         ]);
 
         setUser(userResponse.data.user);
@@ -232,14 +261,16 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
   }
 
   return (
-    <motion.div
-      className="flex flex-col p-4 w-full max-w-md mx-auto bg-white rounded-lg shadow-md hover:shadow-xl transition-all"
+    <Card
+      className="flex flex-col p-4 w-full max-w-md mx-auto hover:shadow-xl transition-all"
       whileHover={{ scale: 1.05 }}
     >
       {/* Header: User Info */}
       <div className="flex gap-3">
         <Avatar
-          src={user?.profileImage || `https://api.multiavatar.com/${user?._id}.svg`} // Optional chaining added here
+          src={
+            user?.profileImage || `https://api.multiavatar.com/${user?._id}.svg`
+          } // Optional chaining added here
           alt="user-avatar"
           className="h-12 w-12 object-cover border-gray-300 cursor-pointer"
         />
@@ -247,9 +278,7 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
           <h4 className="text-sm font-semibold text-gray-900">
             {`${user.firstName} ${user.lastName}`}
           </h4>
-          <div className="flex items-center">
-            {renderStars(review.rating)}
-          </div>
+          <div className="flex items-center">{renderStars(review.rating)}</div>
           <span className="text-xs text-gray-500">
             {new Date(review.createdAt).toLocaleDateString()}
           </span>
@@ -258,15 +287,33 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
 
       {/* Song Info */}
       <Card className="flex mt-3 gap-4 w-full max-w-fit pr-6">
-      <Link to={`/songs/${review.songId._id}`} className="flex items-center gap-3">
+        <Link
+          to={`/songs/${review.songId._id}`}
+          className="flex items-center gap-3"
+        >
           <img
             src={review.songId.image_url || "/default-image.jpg"}
             alt={review.songId.title}
             className="w-14 h-14 rounded-md object-cover shadow"
           />
           <div className="flex flex-col">
-            <h4 className="text-sm font-semibold text-gray-900">{review.songId.title}</h4>
+            <h4 className="text-sm font-semibold text-gray-900">
+              {review.songId.title}
+            </h4>
             <p className="text-xs text-gray-600">{review.songId.artist}</p>
+            {review.songId.genres?.length > 0 && (
+              <div className="mt-1 flex flex-wrap gap-2">
+                {review.songId.genres.map((genre) => (
+                  <span
+                    key={genre._id} // Aquí el _id sigue siendo necesario para la clave única
+                    className="text-xs text-white bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-1 rounded-full shadow-md"
+                  >
+                    {genre.name}{" "}
+                    {/* Aquí es donde accedes al nombre del género */}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </Link>
       </Card>
@@ -279,7 +326,11 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
         <Button
           variant="outline"
           onClick={handleLikeToggle}
-          className={`gap-2 p-2 ${isLiked ? "bg-gradient-to-r from-blue-500 to-teal-400 text-white" : ""}`}
+          className={`gap-2 p-2 ${
+            isLiked
+              ? "bg-gradient-to-r from-blue-500 to-teal-400 text-white"
+              : ""
+          }`}
         >
           <AiFillHeart />
           <span>{isLiked ? "Liked" : "Like"}</span>
@@ -290,7 +341,7 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
           <AiFillHeart className="text-red-500 text-sm" />
         </div>
       </div>
-    </motion.div>
+    </Card>
   );
 };
 
@@ -302,7 +353,5 @@ const renderStars = (rating) =>
       color={rating >= index + 1 ? "gold" : "#E2E8F0"}
     />
   ));
-
-
 
 export default UserDetails;
