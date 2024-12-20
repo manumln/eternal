@@ -103,6 +103,8 @@ const UserDetails = () => {
               className="w-36 h-36 mx-auto rounded-full shadow-xl"
             />
             <h2 className="text-3xl font-semibold text-gray-900">{user.firstName} {user.lastName}</h2>
+            {user.bio && <p className="text-sm text-gray-600">{user.bio}</p>}{" "}
+
             <div className="grid grid-cols-2 gap-4 mt-6">
               <StatCard label="Followers" count={user.followers.length} />
               <StatCard label="Following" count={user.following.length} />

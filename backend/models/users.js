@@ -16,6 +16,10 @@ const userSchema = new Schema({
     unique: true,
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
+  bio: {
+    type: String,
+    required: true,
+  },
   password: {
     type: String,
     required: true,
@@ -64,6 +68,7 @@ const userSchema = new Schema({
       ref: "User",
     },
   ],
+  
 });
 
 const User = mongoose.model("User", userSchema);

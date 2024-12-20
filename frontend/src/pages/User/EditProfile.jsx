@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Button, Card, Input, Spinner } from "@nextui-org/react";
+import { Button, Card, Input, Spinner, Textarea } from "@nextui-org/react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 
@@ -13,6 +13,9 @@ const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),
+  bio: Yup.string()
+    .max(500, "Bio must be 500 characters or less")
+    .required("Bio is required"),
 });
 
 const EditProfile = () => {
@@ -24,6 +27,7 @@ const EditProfile = () => {
     lastName: "",
     email: "",
     profileImage: "",
+    bio: "", // Añadimos bio a los valores iniciales
   });
   const [previewImage, setPreviewImage] = useState(null);
 
@@ -32,8 +36,8 @@ const EditProfile = () => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/users/${userId}`)
       .then((response) => {
-        const { firstName, lastName, email, profileImage } = response.data.user;
-        setInitialValues({ firstName, lastName, email, profileImage });
+        const { firstName, lastName, email, profileImage, bio } = response.data.user;
+        setInitialValues({ firstName, lastName, email, profileImage, bio });
         setPreviewImage(profileImage);
       })
       .catch((err) => {
@@ -138,6 +142,19 @@ const EditProfile = () => {
                 <Field name="email" as={Input} className="hidden" placeholder="Email" />
                 {errors.email && touched.email && (
                   <div className="text-red-500 hidden text-sm">{errors.email}</div>
+                )}
+              </div>
+              <div className="sm:col-span-2">
+                <label htmlFor="bio" className="block text-sm font-medium">
+                  Bio
+                </label>
+                <Field
+                  name="bio"
+                  as={Textarea}
+                  placeholder="Tell us about yourself"
+                />
+                {errors.bio && touched.bio && (
+                  <div className="text-red-500 text-sm">{errors.bio}</div>
                 )}
               </div>
               <div className="sm:col-span-2">
