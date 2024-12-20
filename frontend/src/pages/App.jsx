@@ -14,9 +14,7 @@ function App() {
         <Header />
         <ErrorBoundary>
           <NextUIProvider>
-            <NextThemesProvider attribute="class" defaultTheme="dark">
               <Outlet />
-            </NextThemesProvider>
           </NextUIProvider>
         </ErrorBoundary>
       </div>

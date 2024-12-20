@@ -24,6 +24,9 @@ router.post("/signup", asyncHandler(signup));
 
 router.post("/login", asyncHandler(login));
 
+router.get("/followed-reviews", authorization, asyncHandler(getFollowedReviews)); // Ruta estática
+
+
 router
   .route("/favourites")
   .get(authorization, asyncHandler(getFavouriteSongs))
@@ -39,6 +42,5 @@ router.get("/:userId/reviews", asyncHandler(getUserReviews));
 
 router.put("/:userId/follow", authorization, asyncHandler(toggleFollowUser));
 
-router.get("/feed", authorization, asyncHandler(getFollowedReviews));
 
 module.exports = router;

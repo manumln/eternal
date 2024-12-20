@@ -158,9 +158,9 @@ const SongDetails = () => {
           />
         </div>
 
-        <div className="space-y-4 w-full">
+        <div className=" w-full">
           <h1
-            className="text-6xl font-bold bg-clip-text leading-tight"
+            className="text-8xl font-bold bg-clip-text leading-tight"
             style={{ color: titleColor }}
           >
             {song.title}
@@ -225,6 +225,7 @@ const SongDetails = () => {
 
           <div className="flex gap-4 items-center">
             <Button
+            variant="outline"
               title={isLiked ? "Remove from Favorites" : "Add to Favorites"}
               className={`flex p-3 transition-all ${
                 isLiked

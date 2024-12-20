@@ -5,7 +5,6 @@ import "./index.css";
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import { isAuthenticatedState, isUserLoadingState, userRoleState } from "./atoms/userData";
-import { ThemeProvider } from "./components/theme-provider";
 import UserDetailsPage from "./pages/User/UserDetails";
 import { Toaster } from "sonner";
 import { Spinner } from "@nextui-org/react";
@@ -119,10 +118,8 @@ const appRouter = createBrowserRouter([
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
     <RecoilRoot>
       <Toaster gap="8" offset="20px" position="top-center" theme="light" richColors />
       <RouterProvider router={appRouter} />
     </RecoilRoot>
-  </ThemeProvider>
 );

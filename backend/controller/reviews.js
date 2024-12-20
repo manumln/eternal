@@ -152,27 +152,26 @@ module.exports.likeReview = async (req, res) => {
       .json({ message: "Error liking review", error: error.message });
   }
 };
+
+// Obtener reseñas de usuarios seguidos
 module.exports.getFollowedReviews = async (req, res) => {
   const { userId } = req;
 
   try {
-    // Obtener el usuario actual junto con la lista de personas que sigue
     const user = await User.findById(userId).populate("following", "_id");
-
     if (!user) throw new ExpressError(404, "User not found");
 
-    // Obtener los IDs de los usuarios que sigue
-    const followingIds = user.following.map((follow) => follow._id);
-
-    // Buscar reviews recientes de los usuarios que sigue
-    const reviews = await Review.find({ userId: { $in: followingIds } })
-      .populate("userId", "firstName lastName profileImage")
-      .populate("songId", "title artist")
-      .sort({ createdAt: -1 }) // Ordenar por las más recientes
-      .limit(20); // Limitar la cantidad de resultados (opcional)
+    const followedUserIds = user.following.map((followedUser) => followedUser._id);
+    const reviews = await Review.find({ userId: { $in: followedUserIds } })
+      .populate("userId", "-password -favoriteSongs")
+      .populate("songId", "title artist image_url") // Poblar songId
+      .sort({ createdAt: -1 });
 
     res.status(200).json({ reviews });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching followed reviews", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching followed reviews", error: error.message });
   }
 };
+

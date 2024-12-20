@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { AiOutlineHome, AiOutlineHeart, AiOutlineLogout, AiOutlineLogin } from "react-icons/ai";
+import {
+  AiOutlineHome,
+  AiOutlineHeart,
+  AiOutlineLogout,
+  AiOutlineLogin,
+} from "react-icons/ai";
 import { FiMusic, FiUsers } from "react-icons/fi";
 import { Avatar, Button, Tooltip } from "@nextui-org/react";
-import { ModeToggle } from "./mode-toggle";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { isAuthenticatedState, userIdState, userProfileImageState, userRoleState } from "@/atoms/userData";
+import {
+  isAuthenticatedState,
+  userIdState,
+  userProfileImageState,
+  userRoleState,
+} from "@/atoms/userData";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
@@ -58,7 +67,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-30 bg-gradient-to-r from-blue-500 to-teal-500 dark:from-zinc-900 dark:to-zinc-800 shadow-lg backdrop-blur-lg">
-      <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="relative container mx-auto px-6 py-4 flex items-center justify-between">
         {/* User Avatar and Logo */}
         <div className="flex items-center gap-3">
           <NavLink to={`users/${userId}`} className="pb-0">
@@ -84,25 +93,37 @@ const Header = () => {
         </div>
 
         {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="absolute left-1/2 transform -translate-x-1/2 flex gap-6">
           <Tooltip content="Home">
-            <NavLink to="/" className={({ isActive }) => navLinkClasses(isActive)}>
+            <NavLink
+              to="/"
+              className={({ isActive }) => navLinkClasses(isActive)}
+            >
               <AiOutlineHome className="text-2xl" />
             </NavLink>
           </Tooltip>
           <Tooltip content="Favorites">
-            <NavLink to="/favourites" className={({ isActive }) => navLinkClasses(isActive)}>
+            <NavLink
+              to="/favourites"
+              className={({ isActive }) => navLinkClasses(isActive)}
+            >
               <AiOutlineHeart className="text-2xl" />
             </NavLink>
           </Tooltip>
           <Tooltip content="Songs">
-            <NavLink to="/songs" className={({ isActive }) => navLinkClasses(isActive)}>
+            <NavLink
+              to="/songs"
+              className={({ isActive }) => navLinkClasses(isActive)}
+            >
               <FiMusic className="text-2xl" />
             </NavLink>
           </Tooltip>
           {role === "admin" && (
             <Tooltip content="Users">
-              <NavLink to="/users" className={({ isActive }) => navLinkClasses(isActive)}>
+              <NavLink
+                to="/users"
+                className={({ isActive }) => navLinkClasses(isActive)}
+              >
                 <FiUsers className="text-2xl" />
               </NavLink>
             </Tooltip>
@@ -132,7 +153,6 @@ const Header = () => {
               </Button>
             </Tooltip>
           )}
-          <ModeToggle />
         </div>
       </div>
     </header>

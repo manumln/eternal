@@ -16,7 +16,7 @@ const Songs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState(""); // Valor de búsqueda
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
 
   // Función para obtener canciones con búsqueda
   const fetchSongs = async () => {
@@ -117,12 +117,12 @@ const Songs = () => {
 
       {/* Song Cards Section */}
       {isLoading ? (
-        <div className="flex justify-center items-center h-64">
+        <div className="flex justify-center  items-center h-64">
           <Spinner className="h-12 w-12 animate-spin text-gray-500" />
         </div>
       ) : (
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 max-w-7xl sm:grid-cols-2 lg:grid-cols-4 gap-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}

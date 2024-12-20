@@ -71,6 +71,19 @@ body {
 }
 
 
+@font-face {
+  font-family: 'Lokanova';
+  src: url('/src/fonts/Romancelia.demo.ttf') format('opentype'); /* Asegúrate de que la ruta sea correcta */
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-lokanova {
+  font-family: 'Lokanova', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+
 .font-nimbus {
   font-family: 'Nimbus', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
@@ -102,4 +115,13 @@ body {
 .review-footer {
   font-size: 0.8em;
   color: #888;
+}
+
+.card {
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #eaeaea;
+}
+.card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }

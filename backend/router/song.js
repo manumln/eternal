@@ -22,11 +22,6 @@ const {
   likeComment,
 } = require("../controller/comments.js");
 
-const {
-  getGenres,
-  createGenre,
-} = require("../controller/genres.js");
-
 // Routes for songs
 router
   .route("/")
@@ -79,10 +74,5 @@ router
 router
   .route("/:id/reviews/:reviewId/comments/:commentId/like")
   .post(authorization, asyncHandler(likeComment));
-
-// Routes for genres
-router.route("/genres")
-  .get(asyncHandler(getGenres))
-  .post(authorization, asyncHandler(createGenre));
 
 module.exports = router;

@@ -29,6 +29,7 @@ const ReviewCard = ({
   songId,
   handleParentReload,
   setUserReplyCounter,
+  isFeed,
 }) => {
   const userId = useRecoilValue(userIdState);
   const role = useRecoilValue(userRoleState);
@@ -160,15 +161,15 @@ const ReviewCard = ({
   return (
     <Card className="flex flex-col p-3 sm:p-4 mt-4 w-full overflow-y-auto">
       <div className="flex items-center w-full gap-2 pb-2">
-      <a
+        <a
           href={`/users/${review.userId._id}`}
           className="flex items-center gap-2"
         >
-        <Avatar
-          src={review.userId.profileImage}
-          alt="user"
-          className="h-10 w-10"
-        />
+          <Avatar
+            src={review.userId.profileImage}
+            alt="user"
+            className="h-10 w-10"
+          />
         </a>
         <div className="flex flex-col items-start">
           <h4 className="text-lg font-medium tracking-tight">
@@ -219,7 +220,7 @@ const ReviewCard = ({
             <span className="text-sm">{likesCount}</span>
             <AiFillHeart className="text-red-500 text-sm" />
           </div>
-          
+
           <Button
             variant="outline"
             className="gap-2 p-2"
