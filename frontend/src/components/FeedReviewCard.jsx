@@ -130,14 +130,7 @@ const FeedReviewCard = ({ review }) => {
           <span className="text-sm">{likesCount}</span>
           <AiFillHeart className="text-red-500 text-sm" />
         </div>{" "}
-        <Button
-          variant="outline"
-          className="gap-2 p-2"
-          onClick={() => setShowForm(!showForm)}
-        >
-          <FiMessageCircle />
-          <span className="hidden md:flex">Comment</span>
-        </Button>
+
       </div>
     </Card>
   );
