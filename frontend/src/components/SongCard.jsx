@@ -20,7 +20,7 @@ const SongCard = ({ song }) => {
 
       {/* Contenedor del título y autor debajo de la imagen */}
       <div className="mt-4">
-        <h3 className="font-nimbus text-xl truncate">{song.title}</h3>
+        <h3 className="font-bold text-2xl truncate">{song.title}</h3>
         <p className="mt-1 text-sm ">{song.artist}</p>
       </div>
     </Link>

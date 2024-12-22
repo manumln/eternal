@@ -6,6 +6,7 @@ import { isAuthenticatedState, userRoleState } from "@/atoms/userData";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineLogout } from "react-icons/ai";
 import FollowedReviewList from "@/components/FollowedReviewList";
+import RecentReviewsCarousel from "@/components/RecentReviewsCarousel";
 
 const IntroductionPage = () => {
   const role = useRecoilValue(userRoleState);
@@ -27,6 +28,7 @@ const IntroductionPage = () => {
         className="flex flex-col items-center w-full"
       >
         <div className="w-full overflow-auto">
+          <RecentReviewsCarousel />
           <FollowedReviewList />
         </div>
       </motion.div>

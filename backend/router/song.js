@@ -11,6 +11,7 @@ const {
   deleteReview,
   likeReview,
   getReview,
+  getRecentReviews,
 } = require("../controller/reviews.js");
 
 const genreController = require("../controller/genres.js"); // Import the genre controller
@@ -23,6 +24,9 @@ const {
   getNestedComments,
   likeComment,
 } = require("../controller/comments.js");
+
+router.get("/recent", asyncHandler(getRecentReviews));
+
 
 // Routes for songs
 router
@@ -76,5 +80,6 @@ router
 router
   .route("/:id/reviews/:reviewId/comments/:commentId/like")
   .post(authorization, asyncHandler(likeComment));
+
 
 module.exports = router;

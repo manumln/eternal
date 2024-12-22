@@ -15,7 +15,6 @@ const validationSchema = Yup.object().shape({
     .required("Email is required"),
   bio: Yup.string()
     .max(500, "Bio must be 500 characters or less")
-    .required("Bio is required"),
 });
 
 const EditProfile = () => {
@@ -27,7 +26,7 @@ const EditProfile = () => {
     lastName: "",
     email: "",
     profileImage: "",
-    bio: "", // Añadimos bio a los valores iniciales
+    bio: "", 
   });
   const [previewImage, setPreviewImage] = useState(null);
 

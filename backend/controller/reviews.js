@@ -175,3 +175,19 @@ module.exports.getFollowedReviews = async (req, res) => {
   }
 };
 
+module.exports.getRecentReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find({})
+      .populate("userId", "firstName lastName profileImage")
+      .populate("songId", "title image_url artist")
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    res.json({ reviews });
+  } catch (error) {
+    console.error("Error fetching recent reviews:", error); // Añade un log detallado
+    res
+      .status(500)
+      .json({ message: "Failed to fetch recent reviews", error: error.message });
+  }
+};
