@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const songSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true,
+    unique: true, // Evita duplicados
+  },
   title: {
     type: String,
     required: true,
@@ -17,9 +22,8 @@ const songSchema = new mongoose.Schema({
   preview: {
     type: String,
   },
-  genres: {
-    type: [String], 
-    required: true,
+  album: {
+    type: String,
   },
 });
 

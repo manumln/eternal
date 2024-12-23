@@ -42,7 +42,6 @@ const SongDetails = () => {
   const [counter, setCounter] = useState(0);
 
   const [titleColor, setTitleColor] = useState("#000");
-  const img = new window.Image(); // Asegura que uses el constructor global
 
   const { song, isDetailLoading } = useGetSong();
   const isLoggedIn = useRecoilValue(isAuthenticatedState);
@@ -55,13 +54,13 @@ const SongDetails = () => {
   useEffect(() => {
     const extractColor = async () => {
       if (song?.image_url) {
-        const img = new window.Image(); // Usa el constructor global
-        img.crossOrigin = "anonymous"; // Permitir carga cruzada
+        const img = new window.Image();
+        img.crossOrigin = "anonymous"; // Allow cross-origin loading
         img.src = song.image_url;
 
         img.onload = () => {
           const colorThief = new ColorThief();
-          const color = colorThief.getColor(img); // Obtén el color como [R, G, B]
+          const color = colorThief.getColor(img);
           setTitleColor(`rgb(${color[0]}, ${color[1]}, ${color[2]})`);
         };
 
@@ -140,7 +139,7 @@ const SongDetails = () => {
     }
   };
 
-  const image = song?.image_url.replace("upload/", "upload/w_512/");
+  const image = song?.image_url;
 
   if (isDetailLoading)
     return <Spinner className="mx-auto h-10 w-10 animate-spin" />;
@@ -155,10 +154,11 @@ const SongDetails = () => {
             src={image}
             alt="Song cover"
             className="rounded-lg object-cover w-full h-auto max-w-lg"
+            crossOrigin="anonymous"
           />
         </div>
 
-        <div className=" w-full">
+        <div className="w-full">
           <h1
             className="text-8xl font-bold bg-clip-text leading-tight"
             style={{ color: titleColor }}
@@ -225,7 +225,7 @@ const SongDetails = () => {
 
           <div className="flex gap-4 items-center">
             <Button
-            variant="outline"
+              variant="outline"
               title={isLiked ? "Remove from Favorites" : "Add to Favorites"}
               className={`flex p-3 transition-all ${
                 isLiked
@@ -275,32 +275,7 @@ const SongDetails = () => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <Button
-                        variant="destructive"
-                        onClick={() => {
-                          setIsDeleteLoading(true);
-                          let promise = axios.delete(
-                            `${import.meta.env.VITE_BACKEND_URL}/books/` + id,
-                            {
-                              headers: {
-                                Authorization: `Bearer ${localStorage.getItem(
-                                  "token"
-                                )}`,
-                              },
-                            }
-                          );
-
-                          toast.promise(promise, {
-                            loading: "Loading...",
-                            success: (response) => {
-                              navigate("/books");
-                              return response.data.message;
-                            },
-                            error: (error) => error.response.data.message,
-                            finally: () => setIsDeleteLoading(false),
-                          });
-                        }}
-                      >
+                      <Button variant="destructive" onClick={handleDeleteSong}>
                         {isDeleteLoading ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

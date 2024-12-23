@@ -8,6 +8,7 @@ import { isAuthenticatedState, isUserLoadingState, userRoleState } from "./atoms
 import UserDetailsPage from "./pages/User/UserDetails";
 import { Toaster } from "sonner";
 import { Spinner } from "@nextui-org/react";
+import Feed from "./pages/Feed";
 
 const AddSongPage = lazy(() => import("./pages/Song/AddSong"));
 const HomePage = lazy(() => import("./pages/Home"));
@@ -77,6 +78,14 @@ const appRouter = createBrowserRouter([
         ),
       },
       {
+        path: "/feed",
+        element: (
+          <RouteGuard allowedRoles={["user", "admin"]}>
+            <RouteWrapper page={<Feed />} />
+          </RouteGuard>
+        ),
+      },
+      {
         path: "/users",
         element: (
           <RouteGuard allowedRoles={["admin"]}>
@@ -107,6 +116,10 @@ const appRouter = createBrowserRouter([
             <RouteWrapper page={<EditSongPage />} />
           </RouteGuard>
         ),
+      },
+      {
+        path: "/songs",
+        element: <RouteWrapper page={<SongListPage />} />,
       },
     ],
   },

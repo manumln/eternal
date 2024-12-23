@@ -3,34 +3,43 @@ const Review = require("../models/review");
 const User = require("../models/users");
 const ExpressError = require("../utils/ExpressErrors");
 const { deleteCommentAndReplies } = require("./comments");
+const { searchSongsOnSpotify } = require("../utils/spotify");
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:8000";
 
 module.exports.getAllSongs = async (req, res) => {
-  const { q, page = 1, limit = process.env.DEFAULT_LIMIT || 10 } = req.query;
-  const skip = (page - 1) * limit;
+  const { q, page = 1, limit = 10 } = req.query;
 
-  let filter = {};
-  if (q) {
-    const searchWords = q.split(" ");
-    const regex = new RegExp(searchWords.join("|"), "i");
-    filter = { $or: [{ title: regex }, { artist: regex }] };
+  if (!q) {
+    return res.status(400).json({ error: "Query parameter 'q' is required" });
   }
 
-  const [songs, totalSongs] = await Promise.all([
-    Song.find(filter).skip(skip).limit(limit),
-    Song.countDocuments(filter),
-  ]);
+  const offset = (page - 1) * limit;
 
-  res.json({
-    songs,
-    totalSongs,
-    totalPages: Math.ceil(totalSongs / limit),
-  });
+  try {
+    const data = await searchSongsOnSpotify(q, limit, offset);
+    const songs = data.items.map(track => ({
+      id: track.id,
+      title: track.name,
+      artist: track.artists.map(artist => artist.name).join(", "),
+      image_url: track.album.images[0]?.url,
+      preview: track.preview_url,
+      album: track.album.name,
+    }));
+
+    res.json({
+      songs,
+      totalSongs: data.total,
+      totalPages: Math.ceil(data.total / limit),
+    });
+  } catch (error) {
+    console.error("Error fetching songs from Spotify:", error.message);
+    res.status(500).json({ error: "Failed to fetch songs from Spotify" });
+  }
 };
 
 module.exports.getSong = async (req, res) => {
-  const song = await Song.findById(req.params.id);
+  const song = await Song.findOne({ id: req.params.id });  // Buscar por 'id' en lugar de '_id'
   if (!song) {
     throw new ExpressError(404, "Song not found");
   }
@@ -118,3 +127,34 @@ module.exports.updateSong = async (req, res) => {
 
   res.json({ previous, current, message: `Song Updated` });
 };
+
+module.exports.saveSong = async (req, res) => {
+  const { id, title, artist, image_url, preview, album } = req.body;
+
+  if (!id || !title || !artist) {
+    return res.status(400).json({ error: "ID, title, and artist are required" });
+  }
+
+  try {
+    // Verifica si la canción ya está en la base de datos
+    let song = await Song.findOne({ id });  // Busca usando 'id' en lugar de '_id'
+    if (!song) {
+      // Si no existe, crea una nueva canción
+      song = new Song({
+        id,  // Usa 'id' como el campo del identificador
+        title,
+        artist,
+        image_url,
+        preview,
+        album
+      });
+      await song.save();
+    }
+
+    res.json({ song, message: "Song saved successfully!" });
+  } catch (error) {
+    console.error("Error saving song:", error.message);
+    res.status(500).json({ error: "Failed to save song" });
+  }
+};
+

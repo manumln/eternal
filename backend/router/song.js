@@ -38,15 +38,7 @@ router
     asyncHandler(songController.createSong)
   );
 
-router
-  .route("/:id")
-  .get(asyncHandler(songController.getSong))
-  .put(
-    authorization,
-    upload.single("image"),
-    asyncHandler(songController.updateSong)
-  )
-  .delete(authorization, asyncHandler(songController.deleteSong));
+  router.route("/:id").get(asyncHandler(songController.getSong));
 
 // Routes for reviews
 router
@@ -81,5 +73,6 @@ router
   .route("/:id/reviews/:reviewId/comments/:commentId/like")
   .post(authorization, asyncHandler(likeComment));
 
+  router.post("/:id/save", authorization, asyncHandler(songController.saveSong));
 
 module.exports = router;

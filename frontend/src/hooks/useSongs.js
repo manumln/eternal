@@ -11,7 +11,9 @@ const fetchSongs = async (searchQuery) => {
     });
     return response.data.songs; // Devolver la lista de canciones
   } catch (error) {
-    throw new Error(error?.response?.data?.message || "Error fetching songs.");
+    // En lugar de lanzar un error, retornamos una lista vacía o un mensaje controlado
+    console.error("Error fetching songs:", error);
+    return [];  // Retornamos un array vacío si hay error en la solicitud
   }
 };
 
@@ -31,13 +33,12 @@ const useSongs = () => {
 
     // Llamada a la API
     const loadSongs = async () => {
-      try {
-        const songs = await fetchSongs(searchQuery);
-        setState({ songs, isLoading: false, error: null }); // Actualizar el estado con las canciones
-      } catch (error) {
-        toast.error(error.message); // Mostrar error en caso de fallo
-        setState({ songs: [], isLoading: false, error: error.message }); // Actualizar estado con el error
+      const songs = await fetchSongs(searchQuery); // Aquí se obtiene la lista de canciones
+
+      if (songs.length === 0) {
       }
+
+      setState({ songs, isLoading: false, error: null }); // Actualizar el estado con las canciones o vaciar si hubo un error
     };
 
     loadSongs();

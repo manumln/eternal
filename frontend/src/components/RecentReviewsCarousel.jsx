@@ -3,7 +3,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { Card, Avatar } from "@nextui-org/react";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"; // Importa los componentes de ShadCN
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"; // Importa los componentes de ShadCN
 
 const RecentReviewsCarousel = () => {
   const [reviews, setReviews] = useState([]);
@@ -28,7 +34,8 @@ const RecentReviewsCarousel = () => {
     <div className="w-full my-10">
       {/* Título de la sección */}
       <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800">
-        Recent on <h2 className="font-nimbus text-5xl">eternal</h2>
+        Recent on{" "}
+        <span className="font-nimbus text-5xl text-gradient">eternal</span>
       </h2>
 
       {/* Carrusel de reseñas con ShadCN */}
@@ -41,32 +48,54 @@ const RecentReviewsCarousel = () => {
               const song = review.songId || {};
 
               return (
-                <CarouselItem key={review._id} className="pl-1 md:basis-1/2 lg:basis-1/3">
+                <CarouselItem
+                  key={review._id}
+                  className="px-4 md:basis-1/2 lg:basis-1/3"
+                >
                   <div className="p-4">
                     {/* Tarjeta cuadrada moderna */}
-                    <Card hoverable className="flex flex-col justify-between h-full">
+                    <Card
+                      hoverable
+                      className="flex flex-col justify-between h-full border border-gray-200 shadow-lg rounded-lg"
+                    >
                       {/* Imagen de la canción */}
                       <div
-                        className="w-full h-full aspect-w-2 aspect-h-2 bg-cover bg-center rounded-lg"
-                        style={{ backgroundImage: `url(${song.image_url || 'defaultImage.jpg'})` }}
+                        className="w-81 h-80 bg-cover bg-center rounded-t-lg"
+                        style={{
+                          backgroundImage: `url(${
+                            song.image_url || "defaultImage.jpg"
+                          })`,
+                        }}
                       ></div>
 
                       {/* Contenedor de información de la canción */}
-                      <div className="mt-4">
-                        <h4 className="text-lg font-semibold">{song.title || "Untitled"}</h4>
-                        <p className="text-sm text-gray-500">{song.artist || "Unknown"}</p>
-                        <p className="mt-2 text-sm text-gray-600">{review.content || "No content available"}</p>
+                      <div className="mt-4 px-3">
+                        <h4 className="text-lg font-semibold text-gray-800">
+                          {song.title || "Untitled"}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          {song.artist || "Unknown"}
+                        </p>
+                        <p className="mt-2 text-sm text-gray-700">
+                          {review.content || "No content available"}
+                        </p>
                       </div>
 
                       {/* Información del usuario que dejó la reseña */}
-                      <div className="flex items-center p-4 gap-4 mt-4">
+                      <div className="flex items-center p-4 gap-4 mt-4 bg-gray-50 rounded-b-lg">
                         <Avatar
-                          src={user.profileImage || `https://api.multiavatar.com/${user._id || "default"}.svg`}
+                          src={
+                            user.profileImage ||
+                            `https://api.multiavatar.com/${
+                              user._id || "default"
+                            }.svg`
+                          }
                           alt={`${user.firstName} ${user.lastName}`}
                           size="lg"
+                          className="shadow-md"
                         />
                         <div>
-                          <p className="text-sm font-medium">
+                          <p className="text-sm font-medium text-gray-900">
                             {user.firstName} {user.lastName || "Unknown"}
                           </p>
                         </div>
@@ -79,8 +108,10 @@ const RecentReviewsCarousel = () => {
         </CarouselContent>
 
         {/* Botones de navegación */}
-        <CarouselPrevious />
-        <CarouselNext />
+        <div className="absolute inset-0 flex justify-between items-center px-4 z-10">
+          <CarouselPrevious className="bg-gray-800 text-white rounded-full p-2 shadow-md hover:bg-gray-700 transition-all" />
+          <CarouselNext className="bg-gray-800 text-white rounded-full p-2 shadow-md hover:bg-gray-700 transition-all" />
+        </div>
       </Carousel>
     </div>
   );

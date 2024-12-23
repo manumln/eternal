@@ -17,7 +17,6 @@ const FollowedReviewList = () => {
         },
       })
       .then((response) => {
-        console.log(response.data); // Verifica la respuesta
         setReviews(response.data.reviews);
       })
       .catch((err) => {
@@ -32,23 +31,27 @@ const FollowedReviewList = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full grid items-center">
-        <Spinner />
+      <div className="w-full flex justify-center items-center py-12">
+        <Spinner size="xl" />
       </div>
     );
   }
 
   return (
-    <section className="w-full max-w-6xl m-auto mt-5">
-      <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight lg:text-3xl">
-        Following
+    <section className="w-full max-w-7xl m-auto mt-8 px-6">
+      <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800">
+      Reviews You're Following
       </h2>
-      {reviews.length !== 0 ? (
-        reviews.map((review, index) => (
-          <FeedReviewCard key={index} review={review} />
-        ))
+      {reviews.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {reviews.map((review, index) => (
+            <FeedReviewCard key={index} review={review} />
+          ))}
+        </div>
       ) : (
-        <h3 className="text-2xl tracking-tight">No hay reseñas disponibles</h3>
+        <div className="text-center text-xl text-gray-500">
+          No reviews available to show.
+        </div>
       )}
     </section>
   );

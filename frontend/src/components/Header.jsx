@@ -5,8 +5,12 @@ import {
   AiOutlineHeart,
   AiOutlineLogout,
   AiOutlineLogin,
+  AiOutlineUser,
+  AiFillUpSquare,
 } from "react-icons/ai";
-import { FiMusic, FiUsers } from "react-icons/fi";
+import { PiUsersThree } from "react-icons/pi";
+
+import { FiMusic, FiUser, FiUsers } from "react-icons/fi";
 import { Avatar, Button, Tooltip } from "@nextui-org/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -102,6 +106,14 @@ const Header = () => {
               <AiOutlineHome className="text-2xl" />
             </NavLink>
           </Tooltip>
+          <Tooltip content="Feed">
+            <NavLink
+              to="/feed"
+              className={({ isActive }) => navLinkClasses(isActive)}
+            >
+              <PiUsersThree className="text-2xl" />
+            </NavLink>
+          </Tooltip>
           <Tooltip content="Favorites">
             <NavLink
               to="/favourites"
@@ -118,6 +130,7 @@ const Header = () => {
               <FiMusic className="text-2xl" />
             </NavLink>
           </Tooltip>
+
           {role === "admin" && (
             <Tooltip content="Users">
               <NavLink

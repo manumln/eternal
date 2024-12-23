@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import axios from "axios";
 
 // Función separada para la llamada a la API
 const fetchData = async (id) => {
@@ -19,25 +19,30 @@ const useGetSong = () => {
     isLoading: true,
     error: null,
   });
-  
-  const { id } = useParams();
+
+  const { id } = useParams();  // Recupera el 'id' de la URL
 
   useEffect(() => {
-    if (!id) return; 
+    if (!id) {
+      console.error('No song ID available!');
+      return;
+    }
 
     const loadSong = async () => {
-      setState((prevState) => ({ ...prevState, isLoading: true, error: null })); 
+      setState((prevState) => ({ ...prevState, isLoading: true, error: null }));
       try {
+        console.log(`Fetching song with ID: ${id}`); // Log el id para verificar que está correcto
         const song = await fetchData(id);
         setState({ song, isLoading: false, error: null });
       } catch (error) {
+        // Mostrar el error en el toast y actualizar el estado
         toast.error(error.message);
         setState({ song: null, isLoading: false, error: error.message });
       }
     };
 
     loadSong();
-  }, [id]);
+  }, [id]); // El hook se ejecutará cada vez que el 'id' cambie
 
   return {
     song: state.song,

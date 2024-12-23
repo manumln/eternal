@@ -22,13 +22,16 @@ const Songs = () => {
   const fetchSongs = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/songs`, {
-        params: {
-          page: currentPage,
-          limit: itemsPerPage,
-          q: searchQuery, // Pasamos el valor de búsqueda
-        },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/songs`,
+        {
+          params: {
+            page: currentPage,
+            limit: itemsPerPage,
+            q: searchQuery, // Pasamos el valor de búsqueda
+          },
+        }
+      );
       setSongs(response.data.songs);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -129,7 +132,7 @@ const Songs = () => {
         >
           {songs.map((song) => (
             <motion.div
-              key={song._id}
+              key={song.id} // Usamos song.id
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
