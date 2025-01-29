@@ -18,6 +18,7 @@ import { Toaster } from "sonner";
 import { Spinner } from "@nextui-org/react";
 import Feed from "./pages/Feed";
 import { ThemeProvider } from "./components/theme-provider";
+import LatestReviews from "./pages/LatestReviews";
 
 const AddSongPage = lazy(() => import("./pages/Song/AddSong"));
 const HomePage = lazy(() => import("./pages/Home"));
@@ -129,6 +130,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/songs",
         element: <RouteWrapper page={<SongListPage />} />,
+      },
+      {
+        path: "/latest-reviews",
+        element: <RouteWrapper page={<LatestReviews />} />,
       },
     ],
   },

@@ -11,9 +11,6 @@
   },
   "dependencies": {
     "@ariakit/react": "^0.4.15",
-    "@capacitor/android": "^6.2.0",
-    "@capacitor/core": "^6.2.0",
-    "@capacitor/ios": "^6.2.0",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
     "@headlessui/react": "^2.2.0",

@@ -133,3 +133,25 @@ body {
 .card:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+@keyframes wave {
+  0% {
+    background-position: -100% 0;
+  }
+  50% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.animate-wave {
+  background: linear-gradient(90deg, rgba(0, 242, 96, 0.7), rgba(5, 117, 230, 0.7)); /* Gradiente suave */
+  background-size: 300% 100%; /* Extiende el gradiente para suavizar el corte */
+  animation: wave 10s ease-in-out infinite;
+  background-clip: text;
+  -webkit-background-clip: text; /* Para compatibilidad con Safari */
+  color: transparent;
+  display: inline-block;
+}

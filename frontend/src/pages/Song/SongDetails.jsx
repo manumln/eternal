@@ -7,26 +7,13 @@ import useGetSong from "@/hooks/useGetSong";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useRecoilValue, useRecoilState } from "recoil";
-import {
-  isAuthenticatedState,
-  userRoleState,
-  userFavouriteSongsState,
-} from "@/atoms/userData";
+import { isAuthenticatedState, userRoleState, userFavouriteSongsState } from "@/atoms/userData";
 import SameArtist from "@/components/SameArtist";
 import { toast } from "sonner";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { AiFillHeart, AiFillStar } from "react-icons/ai";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../../components/ui/alert-dialog";
-import { FiEdit2, FiPenTool, FiStar, FiTrash2 } from "react-icons/fi";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../../components/ui/alert-dialog";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import ColorThief from "colorthief";
 
 // Lazy-loaded components
@@ -40,15 +27,12 @@ const SongDetails = () => {
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [counter, setCounter] = useState(0);
-
   const [titleColor, setTitleColor] = useState("#000");
 
   const { song, isDetailLoading } = useGetSong();
   const isLoggedIn = useRecoilValue(isAuthenticatedState);
   const role = useRecoilValue(userRoleState);
-  const [userFavouriteSongs, setUserFavouriteSongs] = useRecoilState(
-    userFavouriteSongsState
-  );
+  const [userFavouriteSongs, setUserFavouriteSongs] = useRecoilState(userFavouriteSongsState);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -73,32 +57,24 @@ const SongDetails = () => {
     extractColor();
   }, [song]);
 
-  // Set initial "liked" state based on current favorites
   useEffect(() => {
-    if (song) setIsLiked(userFavouriteSongs.includes(song._id));
-  }, [song, userFavouriteSongs]);
-
-  // Fetch review on song or login status change
-  useEffect(() => {
-    if (isLoggedIn && song) {
+    if (song && isLoggedIn) {
       axios
-        .get(
-          `${import.meta.env.VITE_BACKEND_URL}/songs/${song._id}/reviews/me`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
+        .get(`${import.meta.env.VITE_BACKEND_URL}/songs/${song._id}/reviews/me`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        })
         .then(({ data }) => {
           setMyReview(data);
           setIsEditing(false);
         })
         .catch(console.error);
     }
-  }, [isLoggedIn, song, counter]);
+  }, [song, isLoggedIn, counter]);
 
-  // Handle favorite toggle
+  useEffect(() => {
+    if (song) setIsLiked(userFavouriteSongs.includes(song._id));
+  }, [song, userFavouriteSongs]);
+
   const toggleFavorite = useCallback(async () => {
     if (!isLoggedIn) return toast.error("You need to be logged in");
 
@@ -107,9 +83,7 @@ const SongDetails = () => {
       await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/users/favourites`,
         { songId: song._id },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
       setUserFavouriteSongs((prev) =>
         isLiked ? prev.filter((id) => id !== song._id) : [...prev, song._id]
@@ -124,12 +98,9 @@ const SongDetails = () => {
   const handleDeleteSong = async () => {
     setIsDeleteLoading(true);
     try {
-      const { data } = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/songs/${song._id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const { data } = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/songs/${song._id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       navigate("/songs");
       toast.success(data.message);
     } catch (error) {
@@ -141,9 +112,8 @@ const SongDetails = () => {
 
   const image = song?.image_url;
 
-  if (isDetailLoading)
-    return <Spinner className="mx-auto h-10 w-10 animate-spin" />;
-  if (!song) return "";
+  if (isDetailLoading) return <Spinner className="mx-auto h-10 w-10 animate-spin" />;
+  if (!song) return null;
 
   return (
     <div className="flex flex-col items-center p-4 sm:p-6 gap-6">
@@ -159,10 +129,7 @@ const SongDetails = () => {
         </div>
 
         <div className="w-full">
-          <h1
-            className="text-8xl font-bold bg-clip-text leading-tight"
-            style={{ color: titleColor }}
-          >
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold leading-tight">
             {song.title}
           </h1>
           <div className="flex items-center gap-2 text-lg">
@@ -171,46 +138,31 @@ const SongDetails = () => {
           </div>
 
           {isLoggedIn && myReview && (
-            <Card className="w-full p-6 hover:shadow-2xl transition-shadow duration-300">
+            <Card className="w-full p-6 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center gap-4">
-                <div className="relative">
-                  <Avatar
-                    className="h-10 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-gray-300 cursor-pointer"
-                    src={
-                      myReview.userId.profileImage ||
-                      "/path/to/default-avatar.png"
-                    }
-                    alt="user"
-                  />
-                </div>
+                <Avatar
+                  className="h-10 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-gray-300 cursor-pointer"
+                  src={myReview.userId.profileImage || "/path/to/default-avatar.png"}
+                  alt="user"
+                />
                 <div className="flex flex-col">
-                  <h4 className="text-xl font-semibold">
-                    {myReview.userId.firstName} {myReview.userId.lastName}
-                  </h4>
+                  <h4 className="text-xl font-semibold">{myReview.userId.firstName} {myReview.userId.lastName}</h4>
                   <div className="flex items-center gap-2 mt-1">
                     {[...Array(5)].map((_, index) => (
-                      <AiFillStar
-                        key={index}
-                        size={16}
-                        color={myReview.rating >= index + 1 ? "gold" : "gray"}
-                      />
+                      <AiFillStar key={index} size={16} color={myReview.rating >= index + 1 ? "gold" : "gray"} />
                     ))}
-                    <span className="text-gray-500 text-sm">
-                      {dateFormat(myReview.createdAt)}
-                    </span>
+                    <span className="text-sm">{dateFormat(myReview.createdAt)}</span>
                   </div>
                 </div>
                 <Button
                   variant="outline"
                   onClick={() => setIsEditing((prev) => !prev)}
-                  className="ml-auto text-gray-600 hover:text-gray-900"
+                  className="ml-auto hover:text-gray-900"
                 >
                   <FiEdit2 size={20} />
                 </Button>
               </div>
-              <blockquote className="mt-3 text-sm sm:text-base">
-                {myReview.content}
-              </blockquote>
+              <blockquote className="mt-3 text-sm sm:text-base">{myReview.content}</blockquote>
             </Card>
           )}
 
@@ -223,30 +175,19 @@ const SongDetails = () => {
             />
           )}
 
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center mt-4">
             <Button
               variant="outline"
               title={isLiked ? "Remove from Favorites" : "Add to Favorites"}
-              className={`flex p-3 transition-all ${
-                isLiked
-                  ? "bg-gradient-to-r from-red-500 to-orange-400 text-white"
-                  : ""
-              }`}
+              className={`flex items-center gap-2 p-3 transition-all ${isLiked ? "bg-gradient-to-r from-red-500 to-orange-400 text-white" : ""}`}
               onClick={toggleFavorite}
             >
               {isHeartLoading ? (
-                <Spinner
-                  color="white"
-                  strokeWidth={2.5}
-                  opacity={0.5}
-                  className="w-8 h-8 animate-spin"
-                />
+                <Spinner color="white" strokeWidth={2.5} opacity={0.5} className="w-8 h-8 animate-spin" />
               ) : (
                 <AiFillHeart size={20} color={isLiked ? "white" : "red"} />
               )}
-              <span>
-                {isLiked ? "Added to Favourites" : "Add to Favourites"}
-              </span>
+              <span>{isLiked ? "Added to Favourites" : "Add to Favourites"}</span>
             </Button>
 
             {role === "admin" && (
@@ -258,7 +199,7 @@ const SongDetails = () => {
                   <AlertDialogTrigger asChild>
                     <Button
                       variant="outline"
-                      className="border-2 border-red-300 hover:bg-gradient-to-r from-red-500 to-orange-400 text-white-500 hover:text-zinc-50 dark:text-zinc-50"
+                      className="border-2 border-red-300 hover:bg-gradient-to-r from-red-500 to-orange-400 text-white"
                     >
                       <FiTrash2 className="mr-2 h-4 w-4" />
                       Delete
@@ -266,11 +207,9 @@ const SongDetails = () => {
                   </AlertDialogTrigger>
                   <AlertDialogContent className="w-11/12">
                     <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
+                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This will permanently delete the song data.
+                        This will permanently delete the song.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -278,7 +217,7 @@ const SongDetails = () => {
                       <Button variant="destructive" onClick={handleDeleteSong}>
                         {isDeleteLoading ? (
                           <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <Spinner className="mr-2 h-4 w-4 animate-spin" />
                             Please wait
                           </>
                         ) : (
@@ -295,15 +234,13 @@ const SongDetails = () => {
       </Card>
 
       {song?.preview?.trim() && (
-        <div className="mt-4 w-full max-w-6xl mx-auto p-6 bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg shadow-lg">
+        <div className="mt-6 w-full max-w-6xl mx-auto p-6 bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg shadow-lg">
           <h3 className="text-xl font-semibold text-white mb-4">Preview</h3>
           <AudioPlayer src={song.preview} autoPlay={false} controls />
         </div>
       )}
 
-      <Suspense
-        fallback={<Spinner className="mx-auto h-10 w-10 animate-spin" />}
-      >
+      <Suspense fallback={<Spinner className="mx-auto h-10 w-10 animate-spin" />}>
         <SameArtist song={song} />
         <ReviewList
           song={song}

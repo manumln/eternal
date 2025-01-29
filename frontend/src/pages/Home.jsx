@@ -54,7 +54,15 @@ const IntroductionPage = () => {
         className="flex flex-col justify-center text-center md:text-left md:flex-1"
       >
         <h1 className="text-5xl font-extrabold mb-4 leading-tight">
-          Welcome to <span className="text-sky-500 font-nimbus">eternal</span>
+          Welcome to{" "}
+          <motion.span
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 1.2 }}
+            className="animate-wave font-nimbus"
+            
+          >
+            eternal
+          </motion.span>
         </h1>
         <p className="text-lg leading-relaxed mb-6 max-w-lg">
           Discover and share your love for music with a vibrant community of enthusiasts.

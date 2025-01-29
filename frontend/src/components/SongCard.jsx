@@ -23,15 +23,17 @@ const SongCard = ({ song }) => {
       alert("Failed to save song. Please try again.");
     }
   };
+
   const imageUrl = song.image_url.replace("/upload", "/upload/h_400");
 
   return (
     <Link
-    onClick={handleCardClick}
+      onClick={handleCardClick}
       className="group w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-3 py-6 transition-all transform hover:scale-105 hover:shadow-lg"
-  >
+    >
       <Card className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all">
-        <div className="relative w-full h-72 sm:h-96 lg:h-96">
+        {/* Contenedor cuadrado */}
+        <div className="relative w-full h-full aspect-w-1 aspect-h-1">
           <img
             src={imageUrl}
             alt={song.title}

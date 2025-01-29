@@ -112,10 +112,10 @@ const UserDetails = () => {
               alt="Profile Image"
               className="w-36 h-36 mx-auto rounded-full shadow-xl"
             />
-            <h2 className="text-3xl font-semibold text-gray-900">
+            <h2 className="text-3xl font-semibold">
               {user.firstName} {user.lastName}
             </h2>
-            {user.bio && <p className="text-sm text-gray-600">{user.bio}</p>}{" "}
+            {user.bio && <p className="text-sm">{user.bio}</p>}{" "}
             <div className="grid grid-cols-2 gap-4 mt-6">
               <StatCard label="Followers" count={user.followers.length} />
               <StatCard label="Following" count={user.following.length} />
@@ -125,7 +125,7 @@ const UserDetails = () => {
                 onClick={toggleFollow}
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
-                className={`mt-4 px-6 py-2 text-white transition-all duration-200 ${
+                className={`mt-4 px-6 py-2 transition-all duration-200 ${
                   isHovering && isFollowing
                     ? "bg-gradient-to-r from-red-500 to-orange-400"
                     : isFollowing
@@ -153,7 +153,7 @@ const UserDetails = () => {
             <div className="mt-8 text-center">
               <Button
                 onClick={() => navigate(`/users/${userId}/edit`)}
-                className="bg-gradient-to-r from-blue-500 to-teal-400 text-white shadow-md hover:opacity-90 transition-all"
+                className="bg-gradient-to-r from-blue-500 to-teal-400 shadow-md hover:opacity-90 transition-all"
               >
                 <FiEdit2 className="mr-2" />
                 Edit Profile
@@ -165,7 +165,7 @@ const UserDetails = () => {
 
       {/* Reviews Section */}
       <div className="col-span-2 space-y-8">
-        <h3 className="text-2xl font-semibold text-center text-gray-900">
+        <h3 className="text-2xl font-semibold text-center">
           Reviews of {user.firstName} {user.lastName}
         </h3>
         <div>
@@ -186,8 +186,8 @@ const UserDetails = () => {
 
 const StatCard = ({ label, count }) => (
   <div className="flex flex-col items-center">
-    <p className="text-2xl font-semibold text-gray-900">{count}</p>
-    <span className="text-sm text-gray-500">{label}</span>
+    <p className="text-2xl font-semibold">{count}</p>
+    <span className="text-sm">{label}</span>
   </div>
 );
 
@@ -255,9 +255,8 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
     setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
   };
 
-  // Check if user is loaded before rendering
   if (isLoading || !user) {
-    return <div>Loading...</div>; // Or render a spinner, or a placeholder, as you prefer
+    return <div>Loading...</div>;
   }
 
   return (
@@ -265,21 +264,20 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
       className="flex flex-col p-4 w-full max-w-md mx-auto hover:shadow-xl transition-all"
       whileHover={{ scale: 1.05 }}
     >
-      {/* Header: User Info */}
       <div className="flex gap-3">
         <Avatar
           src={
             user?.profileImage || `https://api.multiavatar.com/${user?._id}.svg`
-          } // Optional chaining added here
+          }
           alt="user-avatar"
-          className="h-12 w-12 object-cover border-gray-300 cursor-pointer"
+          className="h-12 w-12 object-cover cursor-pointer"
         />
         <div>
-          <h4 className="text-sm font-semibold text-gray-900">
+          <h4 className="text-sm font-semibold">
             {`${user.firstName} ${user.lastName}`}
           </h4>
           <div className="flex items-center">{renderStars(review.rating)}</div>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs">
             {new Date(review.createdAt).toLocaleDateString()}
           </span>
         </div>
@@ -297,10 +295,8 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
             className="w-14 h-14 rounded-md object-cover shadow"
           />
           <div className="flex flex-col">
-            <h4 className="text-sm font-semibold text-gray-900">
-              {review.songId.title}
-            </h4>
-            <p className="text-xs text-gray-600">{review.songId.artist}</p>
+            <h4 className="text-sm font-semibold">{review.songId.title}</h4>
+            <p className="text-xs">{review.songId.artist}</p>
             {review.songId.genres?.length > 0 && (
               <div className="mt-1 flex flex-wrap gap-2">
                 {review.songId.genres.map((genre) => (
@@ -319,7 +315,7 @@ const ReviewCard = ({ review, toggleLike, likedReviews = [] }) => {
       </Card>
 
       {/* Review Content */}
-      <p className="mt-3 text-sm text-gray-700 text-left">{review.content}</p>
+      <p className="mt-3 text-sm text-left">{review.content}</p>
 
       {/* Actions: Likes */}
       <div className="mt-3 flex items-center justify-between">
