@@ -2,13 +2,22 @@ import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./pages/App";
 import "./index.css";
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
-import { isAuthenticatedState, isUserLoadingState, userRoleState } from "./atoms/userData";
+import {
+  isAuthenticatedState,
+  isUserLoadingState,
+  userRoleState,
+} from "./atoms/userData";
 import UserDetailsPage from "./pages/User/UserDetails";
 import { Toaster } from "sonner";
 import { Spinner } from "@nextui-org/react";
 import Feed from "./pages/Feed";
+import { ThemeProvider } from "./components/theme-provider";
 
 const AddSongPage = lazy(() => import("./pages/Song/AddSong"));
 const HomePage = lazy(() => import("./pages/Home"));
@@ -129,10 +138,17 @@ const appRouter = createBrowserRouter([
   },
 ]);
 
-
 ReactDOM.createRoot(document.getElementById("root")).render(
+  <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
     <RecoilRoot>
-      <Toaster gap="8" offset="20px" position="top-center" theme="light" richColors />
+      <Toaster
+        gap="8"
+        offset="20px"
+        position="top-center"
+        theme={"light"}
+        richColors
+      />
       <RouterProvider router={appRouter} />
     </RecoilRoot>
+  </ThemeProvider>
 );
